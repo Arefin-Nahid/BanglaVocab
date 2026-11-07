@@ -1,0 +1,909 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>BCS শব্দভাণ্ডার</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@500;600;700&display=swap">
+<style>
+/* Layout: sticky top bar with tabs (bottom tab bar on phones), one centered column of cards, full-screen focus view for study sessions. */
+:root{
+  --bg:#f1f5f2; --surface:#fafcfa; --surface2:#e6eee9; --ink:#1d2b26; --muted:#5a6d65; --line:#d3dfd8;
+  --accent:#2f7d68; --accent-ink:#ffffff; --accent-soft:#dff0e8; --pri:#cde8db; --pri-ink:#15523f; --pri-line:#a9d3c0;
+  --good:#5a8f29; --good-soft:#e6f0d8; --warn:#8f6511; --warn-soft:#f7ecd1; --bad:#b3402f; --bad-soft:#f9e3de;
+  --shadow:0 1px 2px rgba(29,43,38,.06),0 6px 18px rgba(29,43,38,.05);
+  --ff-ui:'Hind Siliguri',system-ui,'Segoe UI','Noto Sans Bengali',sans-serif;
+  --ff-q:'Noto Serif Bengali','Hind Siliguri',Georgia,serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c0c0c; --surface:#161616; --surface2:#212121; --ink:#ececec; --muted:#9b9b9b; --line:#2d2d2d;
+  --accent:#6fcfae; --accent-ink:#06190f; --accent-soft:#1d2b25; --pri:#2a4a3d; --pri-ink:#a6e6c8; --pri-line:#3a6150;
+  --good:#a3d46c; --good-soft:#232b1a; --warn:#e6b45c; --warn-soft:#2f2a1a; --bad:#f08c7c; --bad-soft:#33201e;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c0c0c; --surface:#161616; --surface2:#212121; --ink:#ececec; --muted:#9b9b9b; --line:#2d2d2d;
+  --accent:#6fcfae; --accent-ink:#06190f; --accent-soft:#1d2b25; --pri:#2a4a3d; --pri-ink:#a6e6c8; --pri-line:#3a6150;
+  --good:#a3d46c; --good-soft:#232b1a; --warn:#e6b45c; --warn-soft:#2f2a1a; --bad:#f08c7c; --bad-soft:#33201e;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--ff-ui);-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+header.top .in{display:flex;align-items:center;gap:16px;min-height:56px;flex-wrap:nowrap}
+.brand{font:700 18px/1.2 var(--ff-q);letter-spacing:.01em;margin-right:auto;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.brand small{display:block;font:500 11px/1.2 var(--ff-ui);color:var(--muted);letter-spacing:.04em}
+nav.tabs{display:flex;gap:2px;order:2}
+nav.tabs button{background:none;border:0;padding:8px 12px;border-radius:8px;color:var(--muted);font-weight:500;white-space:nowrap}
+nav.tabs button[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+nav.tabs button:hover{color:var(--ink)}
+.m-only{display:none}
+.tools{display:flex;gap:6px;order:3;flex:none}
+.ib{min-width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:inline-flex;align-items:center;justify-content:center;font-weight:600;font-size:14px}
+.ib svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}
+main{padding-block:20px 56px;display:flex;flex-direction:column;gap:14px}
+h1{font:700 26px/1.3 var(--ff-q);margin:0;text-wrap:balance}
+h2{font:700 17px/1.4 var(--ff-ui);margin:0 0 12px}
+h3{font:600 15px/1.4 var(--ff-ui);margin:0}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
+.card.flat{box-shadow:none}
+.lift{box-shadow:var(--shadow)}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.tile .k{font-size:13px;color:var(--muted)}
+.tile .v{font:700 28px/1.2 var(--ff-ui);font-variant-numeric:tabular-nums}
+.tile .s{font-size:12px;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 16px;font-weight:600;min-height:44px}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--pri);color:var(--pri-ink);border-color:var(--pri-line)}
+.btn.pri:hover{filter:brightness(1.06);border-color:var(--accent)}
+.btn.sm{min-height:36px;padding:6px 12px;font-size:14px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row.sp{justify-content:space-between}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:14px;min-height:32px;color:var(--ink)}
+button.chip:hover{border-color:var(--accent)}
+.chip.on{background:var(--pri);color:var(--pri-ink);border-color:var(--pri-line);font-weight:600}
+.tag{display:inline-block;border-radius:6px;padding:1px 8px;font-size:12px;background:var(--surface2);color:var(--muted);font-weight:500}
+.tag.new{background:var(--surface2)}.tag.learning{background:var(--warn-soft);color:var(--warn)}
+.tag.review{background:var(--accent-soft);color:var(--accent)}.tag.mastered{background:var(--good-soft);color:var(--good)}
+.tag.diff{background:var(--bad-soft);color:var(--bad)}.tag.unc{background:var(--warn-soft);color:var(--warn)}
+.stack{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--surface2)}
+.stack i{display:block;height:100%}
+.c-new{background:var(--line)}.c-learning{background:var(--warn)}.c-review{background:var(--accent)}.c-mastered{background:var(--good)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:10px}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.cats{display:flex;flex-direction:column;gap:12px}
+.cats .r{display:grid;grid-template-columns:minmax(120px,200px) 1fr auto;gap:12px;align-items:center}
+.cats .r .stack{height:10px}
+.num{font-variant-numeric:tabular-nums}
+.bars{display:flex;align-items:flex-end;gap:6px;height:120px;border-bottom:1px solid var(--line);padding-top:6px}
+.bars div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;min-width:0}
+.bars i{display:block;background:var(--accent);border-radius:3px 3px 0 0;min-height:0}
+.bars i.n{background:var(--good)}
+.axis{display:flex;gap:6px;font-size:11px;color:var(--muted)}
+.axis span{flex:1;text-align:center;min-width:0;overflow:hidden}
+.hero{display:grid;gap:18px;grid-template-columns:1.4fr 1fr;align-items:center}
+.hero .big{font:700 40px/1.1 var(--ff-ui);font-variant-numeric:tabular-nums}
+.fieldset{display:flex;flex-direction:column;gap:6px}
+label.f{font-size:13px;color:var(--muted);font-weight:500}
+select,input[type=date],input[type=text],input[type=search],input[type=number],textarea{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-height:44px;max-width:100%}
+textarea{width:100%;min-height:92px;resize:vertical}
+input[type=search],input[type=text]{width:100%}
+.switch{display:flex;gap:10px;align-items:center}
+.switch input{width:20px;height:20px;accent-color:var(--accent)}
+.list{display:flex;flex-direction:column}
+.item{border-top:1px solid var(--line);padding:12px 2px;cursor:pointer;display:grid;gap:4px}
+.item:first-child{border-top:0}
+.item .l1{display:flex;gap:12px;justify-content:space-between;align-items:baseline}
+.item .q{font:600 17px/1.45 var(--ff-q);min-width:0;overflow-wrap:anywhere}
+.item .a{color:var(--muted);font-size:15px;overflow-wrap:anywhere}
+.item .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.item .det{background:var(--surface2);border-radius:10px;padding:12px;margin-top:6px;display:grid;gap:8px;cursor:default}
+.tags{display:flex;gap:6px;flex-wrap:wrap;list-style:none;padding:0;margin:0}
+.tags li{background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:3px 10px;font-size:16px;overflow-wrap:anywhere}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+td.r,th.r{text-align:right}
+.ok{color:var(--good);font-weight:600}.badc{color:var(--bad);font-weight:600}
+.mode{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.mode p{color:var(--muted);font-size:14px}
+/* today */
+.today{padding:14px 16px;display:grid;gap:14px}
+.tstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.ts{padding:0 12px;border-left:1px solid var(--line);min-width:0}
+.ts:first-child{border-left:0;padding-left:0}
+.ts .v{font:700 26px/1.25 var(--ff-ui);font-variant-numeric:tabular-nums}
+.ts .k{font-size:14px;line-height:1.35;white-space:nowrap}
+.ts .s{font-size:12px;line-height:1.4;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbar{display:flex;gap:10px 12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.note{padding:12px 16px}
+.note ul{margin:0;padding-left:18px;display:grid;gap:2px;font-size:14px;color:var(--muted)}
+/* steps + reading list */
+.step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px 12px;align-items:center;border-top:1px solid var(--line);padding-top:14px}
+.step .sa{grid-column:2;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.step .sn{width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 14px/26px var(--ff-ui);text-align:center;flex:none}
+.step .sb{min-width:0;display:grid;gap:2px}
+.lnl{list-style:none;margin:0;padding:0}
+.ln{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;padding:14px 0;border-top:1px solid var(--line);align-items:start}
+.ln:first-child{border-top:0}
+.ln .no{width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:600 13px/28px var(--ff-ui);text-align:center;font-variant-numeric:tabular-nums}
+.ln .lb{display:grid;gap:3px;min-width:0}
+.ln .q{font:700 18px/1.5 var(--ff-q);overflow-wrap:anywhere}
+.ln .a{font:500 16px/1.65 var(--ff-q);overflow-wrap:anywhere}
+.ln .hide{justify-self:start;background:var(--surface2);color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:6px 12px;font-size:14px;min-height:36px}
+.dock{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;box-shadow:var(--shadow);z-index:20}
+.dock .btn{flex:1 1 140px}
+/* search */
+.sbox{padding:12px;display:grid;gap:8px}
+.sbox input[type=search]{min-height:42px;padding:6px 14px;border-radius:12px}
+.filters{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr) minmax(0,1fr);gap:8px}
+.filters select{width:100%;min-height:36px;padding:4px 8px;font-size:14px;border-radius:10px;text-overflow:ellipsis}
+.cnt{margin:0 0 4px}
+.item{grid-template-columns:12px minmax(0,1fr);gap:0 12px;align-items:start}
+.item .dot{width:11px;height:11px;border-radius:50%;margin-top:9px}
+.item .body{display:grid;gap:2px;min-width:0}
+.item .q{font:700 17px/1.5 var(--ff-q)}
+.item .a{color:var(--ink);font-size:15px}
+.item .tag.cat{background:var(--accent-soft);color:var(--accent)}
+/* study session */
+body.focus header.top nav.tabs{display:none}
+.stage{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:16px;width:100%}
+.sess-top{display:flex;gap:12px;align-items:center}
+.prog{flex:1;height:8px;border-radius:4px;background:var(--surface2);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent)}
+.fc{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px;min-height:260px}
+.fc-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.fc-prompt{color:var(--muted);font-size:14px}
+.fc-q{font:700 28px/1.5 var(--ff-q);overflow-wrap:anywhere;text-wrap:balance}
+.fc-a{border-top:1px dashed var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.fc-a .ans{font:600 22px/1.55 var(--ff-q);overflow-wrap:anywhere}
+.rates{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.rates button{display:flex;flex-direction:column;align-items:center;gap:0;padding:8px 6px;border-radius:12px;border:1px solid var(--line);background:var(--surface);min-height:58px}
+.rates button span{font-size:12px;color:var(--muted);font-weight:400}
+.rates .r1{border-color:var(--bad);color:var(--bad)}.rates .r3{border-color:var(--warn);color:var(--warn)}
+.rates .r4{border-color:var(--accent);color:var(--accent)}.rates .r5{border-color:var(--good);color:var(--good)}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 14px;font:500 18px/1.5 var(--ff-q);display:flex;gap:12px;align-items:baseline;min-height:50px}
+.opt kbd{font:600 12px var(--ff-ui);color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:0 6px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt.good{border-color:var(--good);background:var(--good-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.res{border-radius:10px;padding:10px 14px;font-weight:600}
+.res.good{background:var(--good-soft);color:var(--good)}.res.bad{background:var(--bad-soft);color:var(--bad)}.res.warn{background:var(--warn-soft);color:var(--warn)}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.match button{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px;font:500 17px/1.45 var(--ff-q);text-align:left;min-height:52px;overflow-wrap:anywhere}
+.match button.sel{border-color:var(--accent);background:var(--accent-soft)}
+.match button.done{border-color:var(--good);background:var(--good-soft);opacity:.7}
+.match button.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.star{background:none;border:0;font-size:20px;line-height:1;color:var(--muted);padding:4px 8px;min-height:32px}
+.star.on{color:var(--warn)}
+#toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);border-radius:10px;padding:10px 16px;font-size:14px;z-index:50;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 32px)}
+#toast.show{opacity:1}
+.hint{background:var(--accent-soft);border-radius:10px;padding:10px 14px;font-size:14px}
+.empty{padding:28px 12px;text-align:center;color:var(--muted)}
+@media (max-width:760px){
+  header.top .in{min-height:52px}
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;order:0;background:var(--surface);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));justify-content:space-around;z-index:25}
+  nav.tabs button{flex:1;padding:8px 2px;font-size:13px;text-align:center}
+  .d-only{display:none}.m-only{display:block}
+  body.focus nav.tabs{display:none}
+  main{padding-bottom:100px}
+  .hero{grid-template-columns:1fr}
+  .cats .r{grid-template-columns:1fr auto;}
+  .cats .r .stack{grid-column:1/-1}
+  .fc{padding:18px}.fc-q{font-size:24px}
+  .match{gap:8px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div id="app"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script id="data" type="application/json">__DATA__</script>
+<script id="report" type="application/json">__REPORT__</script>
+<script>
+(function(){
+'use strict';
+var DATA=JSON.parse(document.getElementById('data').textContent);
+var REPORT=JSON.parse(document.getElementById('report').textContent);
+var ENTRIES=DATA.entries, CATS=DATA.cats;
+var BYID={}, CATBY={};
+var PARENT={syn2:'syn',sound:'onew',idiomgrp:'idiom'};
+function P(c){return PARENT[c]||c;}
+var DISPCATS=CATS.filter(function(c){return !PARENT[c.id];});
+ENTRIES.forEach(function(e){BYID[e.id]=e;});
+CATS.forEach(function(c){CATBY[c.id]=c;});
+
+/* ---------- helpers ---------- */
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function norm(s){return String(s==null?'':s).normalize('NFC').replace(/[‌‍]/g,'').toLowerCase().replace(/[^\p{L}\p{M}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function dayIdx(t){t=t||Date.now();return Math.floor((t-new Date(t).getTimezoneOffset()*60000)/86400000);}
+function lev(a,b){var m=a.length,n=b.length;if(!m)return n;if(!n)return m;var p=[],i,j;for(j=0;j<=n;j++)p[j]=j;for(i=1;i<=m;i++){var c=[i];for(j=1;j<=n;j++){c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a.charAt(i-1)===b.charAt(j-1)?0:1));}p=c;}return p[n];}
+
+/* ---------- state ---------- */
+var KEY='bcs-vocab-v1';
+function defaults(){return {v:1,langFix:1,rd:null,cards:{},log:{},tm:{n:{ms:0,c:0},r:{ms:0,c:0}},start:dayIdx(),
+  set:{lang:'bn',theme:'auto',hours:1,newPerDay:'auto',order:'source',interleave:true,recall:false,dir:'forward',maxReviews:120,exam:''}};}
+function load(){try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r),d=defaults();var s=Object.assign({},d,o);s.set=Object.assign({},d.set,o.set||{});if(!o.langFix){s.set.lang='bn';s.langFix=1;}s.tm=Object.assign({},d.tm,o.tm||{});return s;}}catch(e){}return defaults();}
+var ST=load(), saveT=null;
+function save(){clearTimeout(saveT);saveT=setTimeout(function(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}},150);}
+function L(bn,en){return ST.set.lang==='bn'?bn:en;}
+var BND='০১২৩৪৫৬৭৮৯';
+function N(n){var s=String(n);if(ST.set.lang==='bn')s=s.replace(/\d/g,function(d){return BND[+d];});return s;}
+function cn(id){var c=CATBY[P(id)];return c?L(c.bn,c.en):id;}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show');},2600);}
+function fmtSec(s){var m=Math.round(s/60);if(s<60)return N(Math.max(1,Math.round(s)))+L(' সেকেন্ড',' sec');if(m<60)return N(m)+L(' মিনিট',' min');return N(Math.floor(m/60))+L(' ঘণ্টা ',' h ')+(m%60?N(m%60)+L(' মিনিট',' min'):'');}
+function fmtDays(d){return N(d)+L(' দিন',' d');}
+function dateStr(d){return new Date(d*86400000).toLocaleDateString(ST.set.lang==='bn'?'bn-BD':'en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});}
+function dateShort(d){return new Date(d*86400000).toLocaleDateString(ST.set.lang==='bn'?'bn-BD':'en-GB',{day:'numeric',month:'short',timeZone:'UTC'});}
+
+/* ---------- derived entry data ---------- */
+var ORDER_L='অআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহৎ'.split('');
+function canRev(e){return e.cat==='ant'||e.cat==='term';}
+function altsOf(str){var out=[];String(str).split('/').forEach(function(p){var n=norm(p);if(n)out.push(n);if(/\(/.test(p)){var s=norm(p.replace(/\(.*?\)/g,''));if(s)out.push(s);}});return out;}
+var VALID={};
+function vadd(k,arr){var s=VALID[k]||(VALID[k]=new Set());arr.forEach(function(x){s.add(x);});}
+ENTRIES.forEach(function(e){
+  e._nq=norm(e.q);e._na=norm(e.a);
+  e._hay=norm(e.q+' '+e.a+' '+(e.group||'')+' '+(e.notes||[]).join(' '));
+  var ch=(e._nq.split('')[0]||'#');
+  e._letter=/[a-z]/.test(ch)?ch.toUpperCase():(/[ঀ-৿]/.test(ch)?ch:'#');
+  var fa=e.items?e.items.map(norm):altsOf(e.a);
+  vadd('f|'+e.cat+'|'+e._nq,fa);
+  if(canRev(e))vadd('r|'+e.cat+'|'+norm(e.a),altsOf(e.q));
+});
+function view(e,rev){if(rev&&canRev(e))return {rev:true,q:e.a,a:e.q,items:null};return {rev:false,q:e.q,a:e.a,items:e.items||null};}
+function vkey(e,v){return (v.rev?'r|':'f|')+e.cat+'|'+norm(v.q);}
+
+/* ---------- memory model (SM-2 + 1/3/7/14/30 ladder + Leitner box) ---------- */
+var LADDER=[1,3,7,14,30];
+function sched(c0,q,today){
+  var c=Object.assign({s:0,ef:2.5,iv:0,l:0,b:1,due:today,last:today},c0||{});
+  var wasNew=!c0||!c0.n, due=wasNew||c.due<=today;
+  if(q<3){c.l=(c.l||0)+1;c.s=0;c.iv=1;c.b=1;c.ef=Math.max(1.3,c.ef-0.2);c.due=today+1;c.last=today;return c;}
+  if(q>=4)c.b=Math.min(5,(c.b||1)+1);
+  if(!due)return c;
+  var prev=c.iv||0;
+  c.ef=Math.max(1.3,c.ef+(0.1-(5-q)*(0.08+(5-q)*0.02)));
+  if(q===3){c.iv=(wasNew||c.s===0)?1:Math.max(1,Math.round(Math.max(prev,1)*1.2));}
+  else{
+    c.s+=(q===5&&wasNew)?2:1;
+    var base=c.s<=LADDER.length?LADDER[c.s-1]:Math.round(prev*c.ef);
+    var iv=base;
+    if(c.s>1)iv=base*clamp(c.ef/2.5,0.85,1.35);
+    if(q===5)iv*=1.25;
+    iv=Math.max(1,Math.round(iv));
+    if(c.s>1&&iv<=prev)iv=prev+1;
+    c.iv=iv;
+  }
+  c.due=today+c.iv;c.last=today;return c;
+}
+function applyGrade(id,q,ms,extra){
+  var today=dayIdx(),c0=ST.cards[id],wasNew=!c0||!c0.n;
+  var c=sched(c0,q,today);
+  c.n=(c0&&c0.n||0)+1;c.c=(c0&&c0.c||0)+(q>=3?1:0);c.w=(c0&&c0.w||0)+(q<3?1:0);
+  if(c0&&c0.star)c.star=true;
+  ST.cards[id]=c;
+  ms=Math.min(ms||0,90000);
+  var lg=ST.log[today]||(ST.log[today]={r:0,c:0,n:0,ms:0});
+  lg.r++;if(q>=3)lg.c++;if(wasNew){if(extra)lg.x=(lg.x||0)+1;else lg.n++;}lg.ms+=ms;
+  var k=wasNew?'n':'r';ST.tm[k].ms+=ms;ST.tm[k].c++;
+  save();return c;
+}
+function status(id){var c=ST.cards[id];if(!c||!c.n)return 'new';if(c.s>=5||c.iv>=21)return 'mastered';if(c.s>=3)return 'review';return 'learning';}
+function isLearned(id){var c=ST.cards[id];return !!(c&&c.n&&c.s>=2);}
+function isDifficult(id){var c=ST.cards[id];return !!(c&&((c.n&&(c.l>=2||c.ef<2.0||(c.n>=3&&c.c/c.n<0.6)))||c.star));}
+function isWeak(id){var c=ST.cards[id];return !!(c&&((c.n&&(c.l>0||(c.n>=2&&c.c/c.n<0.75)))||c.star));}
+function stLabel(s){return {new:L('নতুন','New'),learning:L('শিখছি','Learning'),review:L('রিভিউ','Review'),mastered:L('মুখস্থ','Mastered')}[s];}
+function toggleStar(id){var c=ST.cards[id];if(!c)c=ST.cards[id]={s:0,ef:2.5,iv:0,l:0,b:1,due:dayIdx(),n:0,c:0,w:0};c.star=!c.star;save();return c.star;}
+
+/* ---------- planner ---------- */
+function perf(){
+  var tm=ST.tm,r=0,c=0;for(var k in ST.log){r+=ST.log[k].r;c+=ST.log[k].c;}
+  var tn=tm.n.c>=15?tm.n.ms/tm.n.c/1000:30, tr=tm.r.c>=30?tm.r.ms/tm.r.c/1000:9;
+  var acc=r>=30?c/r:0.8;
+  var p={tNew:clamp(tn,8,120),tRev:clamp(tr,3,40),acc:acc,sample:r,measured:(tm.n.c>=15&&tm.r.c>=30)};
+  p.rpc=5+(1-acc)*10;
+  p.per=p.tNew+p.rpc*p.tRev;
+  p.auto=Math.max(1,Math.floor(ST.set.hours*3600/p.per));
+  return p;
+}
+var ORDER_CACHE={k:'',v:[]};
+function getOrder(){
+  if(ORDER_CACHE.k===ST.set.order)return ORDER_CACHE.v;
+  var ids;
+  if(ST.set.order==='source')ids=ENTRIES.map(function(e){return e.id;});
+  else{var by={},arr=[];ENTRIES.forEach(function(e){(by[e.cat]=by[e.cat]||[]).push(e);});
+    Object.keys(by).forEach(function(k,ci){by[k].forEach(function(e,i){arr.push({id:e.id,p:(i+0.5)/by[k].length,ci:ci});});});
+    arr.sort(function(a,b){return a.p-b.p||a.ci-b.ci;});ids=arr.map(function(x){return x.id;});}
+  ORDER_CACHE={k:ST.set.order,v:ids};return ids;
+}
+function unseenIds(){return getOrder().filter(function(id){var c=ST.cards[id];return !(c&&c.n);});}
+function dueIds(){
+  var today=dayIdx(),out=[];
+  for(var id in ST.cards){var c=ST.cards[id];if(c.n&&c.due<=today)out.push(id);}
+  out.sort(function(a,b){var x=ST.cards[a],y=ST.cards[b];return x.due-y.due||x.b-y.b;});return out;
+}
+function todayPlan(){
+  var p=perf(),today=dayIdx(),due=dueIds(),dueCnt=Math.min(due.length,ST.set.maxReviews);
+  var budget=ST.set.hours*3600,revT=dueCnt*p.tRev;
+  var quota,auto=ST.set.newPerDay==='auto';
+  if(auto){
+    var key=ST.set.hours+'|'+ST.set.maxReviews;
+    if(ST.q&&ST.q.day===today&&ST.q.key===key)quota=ST.q.quota;
+    else{quota=Math.min(p.auto,Math.max(0,Math.floor((budget-revT)/p.tNew)));ST.q={day:today,key:key,quota:quota};save();}
+  }else quota=+ST.set.newPerDay;
+  var done=(ST.log[today]&&ST.log[today].n)||0;
+  var un=unseenIds(),remain=Math.max(0,Math.min(quota-done,un.length));
+  var newIds=un.slice(0,remain);
+  return {p:p,dueIds:due,dueCnt:dueCnt,quota:quota,done:done,newIds:newIds,unseen:un.length,
+          estSec:dueCnt*p.tRev+newIds.length*p.tNew};
+}
+var REV_OFF=[1,4,11,25,55];
+function buildPlan(){
+  var tp=todayPlan(),p=tp.p,un=unseenIds(),today=dayIdx();
+  var perDay=ST.set.newPerDay==='auto'?p.auto:+ST.set.newPerDay;
+  var days=[],i=0,k=0;
+  var firstN=Math.max(0,Math.min(tp.quota-tp.done,un.length));
+  while(i<un.length&&k<800){
+    var n=k===0?firstN:perDay;n=Math.min(n,un.length-i);
+    if(n>0||k>0){days.push({k:k,day:today+k,ids:un.slice(i,i+n)});i+=n;}
+    if(k===0&&n===0&&perDay===0)break;k++;
+    if(k>0&&perDay<=0)break;
+  }
+  var fc={};for(var id in ST.cards){var c=ST.cards[id];if(c.n){var d=Math.max(c.due,today)-today;fc[d]=(fc[d]||0)+1;}}
+  var rows=days.map(function(d){
+    var rev=fc[d.k]||0;
+    days.forEach(function(o){if(o.k<d.k&&REV_OFF.indexOf(d.k-o.k)>=0)rev+=o.ids.length;});
+    var comp={};d.ids.forEach(function(id){var c=P(BYID[id].cat);comp[c]=(comp[c]||0)+1;});
+    return {k:d.k,day:d.day,n:d.ids.length,rev:rev,comp:comp,sec:d.ids.length*p.tNew+rev*p.tRev};
+  });
+  var last=days.length?days[days.length-1].k:0;
+  return {rows:rows,perDay:perDay,unseen:un.length,introDone:today+last,ladderDone:today+last+REV_OFF[REV_OFF.length-1],p:p,tp:tp};
+}
+
+/* ---------- stats ---------- */
+function stats(){
+  var today=dayIdx(),s={total:ENTRIES.length,seen:0,learned:0,diff:0,st:{new:0,learning:0,review:0,mastered:0},box:[0,0,0,0,0],cat:{},ret:null,fc:[0,0,0,0,0,0,0]};
+  var retSum=0,retN=0;
+  DISPCATS.forEach(function(c){s.cat[c.id]={total:0,new:0,learning:0,review:0,mastered:0};});
+  ENTRIES.forEach(function(e){
+    var st=status(e.id),c=ST.cards[e.id];
+    s.st[st]++;s.cat[P(e.cat)].total++;s.cat[P(e.cat)][st]++;
+    if(c&&c.n){s.seen++;if(isLearned(e.id))s.learned++;s.box[clamp((c.b||1)-1,0,4)]++;
+      retSum+=Math.exp(-(today-c.last)/(Math.max(c.iv,1)/0.105));retN++;
+      var d=Math.max(c.due,today)-today;if(d<7)s.fc[d]++;}
+    if(isDifficult(e.id))s.diff++;
+  });
+  if(retN)s.ret=retSum/retN;
+  var r=0,c2=0;for(var k in ST.log){r+=ST.log[k].r;c2+=ST.log[k].c;}
+  s.reviews=r;s.acc=r?c2/r:null;
+  var streak=0;for(var d=today;d>today-4000;d--){if(ST.log[d]&&ST.log[d].r>0)streak++;else if(d===today)continue;else break;}
+  s.streak=streak;
+  s.act=[];for(var j=13;j>=0;j--){var l=ST.log[today-j]||{r:0,n:0};s.act.push({d:today-j,r:l.r,n:l.n});}
+  return s;
+}
+
+/* ---------- prompts ---------- */
+function promptOf(cat,rev){
+  var P={syn:['সমার্থক শব্দ কী?','Synonyms?'],syn2:['সমার্থক / অর্থ কী?','Meaning / synonym?'],ant:['বিপরীত শব্দ কী?','Antonym?'],
+    onew:['এক কথায় প্রকাশ কী?','One word for this?'],sound:['ধ্বনি / ডাকের নাম কী?','Name of this call or sound?'],
+    idiom:['বাগ্‌ধারাটির অর্থ কী?','Meaning of this idiom?'],idiomgrp:['এই অর্থের বাগ্‌ধারাগুলো কী?','Idioms with this meaning?'],
+    proverb:['প্রবাদটির অর্থ কী?','Meaning of this proverb?'],term:['পারিভাষিক (বাংলা) শব্দ কী?','Bengali term for this?']}[cat];
+  if(rev&&cat==='term')return L('ইংরেজি শব্দ কী?','English word for this?');
+  return L(P[0],P[1]);
+}
+
+/* ---------- queues ---------- */
+function interleave(ids){
+  var b={};ids.forEach(function(id){var c=BYID[id].cat;(b[c]=b[c]||[]).push(id);});
+  Object.keys(b).forEach(function(k){shuffle(b[k]);});
+  var keys=shuffle(Object.keys(b)),out=[],more=true;
+  while(more){more=false;keys.forEach(function(k){if(b[k].length){out.push(b[k].shift());more=true;}});}
+  return out;
+}
+function buildDaily(){
+  var tp=todayPlan(),due=tp.dueIds.slice(0,ST.set.maxReviews),nw=tp.newIds.slice();
+  if(ST.set.interleave){due=interleave(due);nw=interleave(nw);}
+  return due.concat(nw);
+}
+
+/* ---------- routing / UI state ---------- */
+var ROUTES=['home','today','practice','search','plan','more','report','prefs','extra'];
+var route='home',S=null,PREV='home';
+var UI={fmt:'flash',cats:[],scope:'any',count:20,weakFmt:'flash',cover:false,rev:{},learnIds:null,ex:{cats:[],count:20,order:'seq'}};
+var BR={q:'',cat:'all',letter:'',st:'all',limit:50,open:null};
+var PL={all:false};
+var IMP={text:'',confirm:false};
+function go(r){route=r;S=null;try{if(location.hash!=='#'+r)location.hash=r;}catch(e){}window.scrollTo(0,0);render();}
+function fromHash(){try{var h=(location.hash||'').slice(1);if(ROUTES.indexOf(h)>=0)return h;}catch(e){}return null;}
+
+function applyTheme(){var r=document.documentElement;if(ST.set.theme==='light'||ST.set.theme==='dark')r.setAttribute('data-theme',ST.set.theme);else r.removeAttribute('data-theme');}
+function effTheme(){if(ST.set.theme!=='auto')return ST.set.theme;return (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';}
+
+/* ---------- views ---------- */
+function headerHTML(){
+  var items=[['home',L('হোম','Home'),''],['today',L('আজ','Today'),''],['practice',L('প্র্যাকটিস','Practice'),''],['search',L('খুঁজুন','Search'),''],['plan',L('প্ল্যান','Plan'),'']];
+  var gear='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>';
+  var cur=route==='session'?(S&&S.from)||'practice':((route==='learn'||route==='extra')?'today':route);
+  var nav=items.map(function(i){return '<button class="'+i[2]+'" data-a="go" data-r="'+i[0]+'"'+(cur===i[0]?' aria-current="page"':'')+'>'+i[1]+'</button>';}).join('');
+  var moon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>';
+  var sun='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>';
+  return '<header class="top"><div class="wrap in"><div class="brand">'+L('বাংলা শব্দভাণ্ডার','BCS Vocabulary')+'<small>'+L('BCS প্রিলি প্রস্তুতি','BCS preliminary prep')+'</small></div>'+
+   '<nav class="tabs" aria-label="'+L('প্রধান মেনু','Main menu')+'">'+nav+'</nav>'+
+   '<div class="tools">'+
+   '<button class="ib" data-a="theme" aria-label="'+L('থিম পরিবর্তন','Toggle theme')+'">'+(effTheme()==='dark'?sun:moon)+'</button>'+
+   '<button class="ib" data-a="settings" aria-label="'+L('সেটিংস','Settings')+'"'+(route==='prefs'?' aria-current="page" style="border-color:var(--accent);color:var(--accent)"':'')+'>'+gear+'</button></div></div></header>';
+}
+function statTile(k,v,s){return '<div class="tile"><div class="k">'+k+'</div><div class="v">'+v+'</div>'+(s?'<div class="s">'+s+'</div>':'')+'</div>';}
+var ICON_X='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+var ICON_BACK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+function stackBar(o,total){
+  total=total||1;return '<div class="stack" role="img" aria-label="'+['mastered','review','learning','new'].map(function(k){return stLabel(k)+' '+N(o[k]);}).join(', ')+'">'+
+   ['mastered','review','learning','new'].map(function(k){return '<i class="c-'+k+'" style="width:'+(o[k]/total*100).toFixed(2)+'%"></i>';}).join('')+'</div>';
+}
+function homeView(){
+  var s=stats(),tp=todayPlan(),nb=tp.dueCnt+tp.newIds.length;
+  var h='<h1>'+L('আপনার প্রোগ্রেস','Your progress')+'</h1>';
+  h+='<section class="card lift hero"><div><div class="muted small">'+L('আজকের পড়া','Today\'s study')+'</div>'+
+    '<div class="big">'+N(tp.dueCnt)+' <span class="small muted" style="font-weight:500">'+L('রিভিউ বাকি','reviews left')+'</span> + '+N(tp.newIds.length)+' <span class="small muted" style="font-weight:500">'+L('নতুন','new')+'</span></div>'+
+    '<p class="muted small">'+(nb?L('সময় লাগবে প্রায় ','About ')+fmtSec(tp.estSec):L('আজকের পড়া শেষ। চাইলে আরও প্র্যাকটিস করতে পারেন।','Done for today. You can still practice.'))+'</p></div>'+
+    '<div class="row"><button class="btn pri" data-a="go" data-r="today"'+(nb?'':' disabled')+'>'+L('শুরু করুন','Start')+'</button><button class="btn" data-a="go" data-r="practice">'+L('প্র্যাকটিস','Practice')+'</button></div></section>';
+  h+='<section class="grid g3">'+statTile(L('মোট শব্দ','Total entries'),N(s.total),L('দেখা হয়েছে ','seen ')+N(s.seen))+
+    statTile(L('শেখা হয়েছে','Learned'),N(s.learned),s.total?N(Math.round(s.learned/s.total*100))+'%':'')+
+    statTile(L('কঠিন শব্দ','Difficult'),N(s.diff),'<a href="#practice" data-a="weak" style="color:var(--accent)">'+L('এগুলো প্র্যাকটিস করুন','Practice these')+'</a>')+
+    statTile(L('সঠিক উত্তরের হার','Accuracy'),s.acc==null?'—':N(Math.round(s.acc*100))+'%',L('মোট উত্তর ','answers ')+N(s.reviews))+
+    statTile(L('টানা পড়ার দিন','Day streak'),N(s.streak),s.streak?L('আজ পড়লে বাড়বে','Study today to extend'):L('আজ শুরু করুন','Start today'))+
+    statTile(L('মনে থাকার হার','Est. retention'),s.ret==null?'—':N(Math.round(s.ret*100))+'%',L('কতটা মনে আছে তার আন্দাজ','estimated from your reviews'))+'</section>';
+  h+='<section class="card"><h2>'+L('কোনটা কতটা শেখা হলো','Learning stages')+'</h2>'+stackBar(s.st,s.total)+
+    '<div class="legend">'+['mastered','review','learning','new'].map(function(k){return '<span><b class="c-'+k+'"></b>'+stLabel(k)+' '+N(s.st[k])+'</span>';}).join('')+'</div></section>';
+  var mx=Math.max.apply(null,s.act.map(function(a){return a.r;}).concat([5]));
+  h+='<section class="grid g2"><div class="card"><h2>'+L('গত ১৪ দিন','Last 14 days')+'</h2><div class="bars" role="img" aria-label="'+L('দৈনিক রিভিউ সংখ্যা','Reviews per day')+'">'+
+    s.act.map(function(a){var hh=a.r/mx*100,nn=a.n/mx*100;return '<div title="'+dateShort(a.d)+': '+a.r+'"><i style="height:'+(hh-nn).toFixed(1)+'%"></i><i class="n" style="height:'+nn.toFixed(1)+'%"></i></div>';}).join('')+'</div>'+
+    '<div class="axis">'+s.act.map(function(a,i){return '<span>'+(i%2===0?N(new Date(a.d*86400000).getUTCDate()):'')+'</span>';}).join('')+'</div>'+
+    '<div class="legend"><span><b class="c-review"></b>'+L('রিভিউ','Reviews')+'</span><span><b class="c-mastered"></b>'+L('নতুন শব্দ','New words')+'</span><span>'+L('সর্বোচ্চ ','Max ')+N(mx)+'</span></div></div>'+
+    '<div class="card"><h2>'+L('আগামী ৭ দিনে কত রিভিউ','Reviews due, next 7 days')+'</h2>'+
+    (function(){var m=Math.max.apply(null,s.fc.concat([1]));return '<div class="bars">'+s.fc.map(function(v,i){return '<div title="'+v+'"><i style="height:'+(v/m*100).toFixed(1)+'%"></i></div>';}).join('')+'</div><div class="axis">'+s.fc.map(function(v,i){return '<span>'+N(v)+'</span>';}).join('')+'</div>';})()+
+    '<div class="legend"><span>'+L('প্রথম বারে জমে থাকা রিভিউও ধরা আছে','First bar includes overdue')+'</span></div></div></section>';
+  h+='<section class="grid g2"><div class="card"><h2>'+L('ক্যাটাগরি অনুযায়ী','By category')+'</h2><div class="cats">'+DISPCATS.map(function(c){var x=s.cat[c.id];
+    return '<div class="r"><span>'+cn(c.id)+'</span>'+stackBar(x,x.total)+'<span class="num small muted">'+N(x.total-x.new)+'/'+N(x.total)+'</span></div>';}).join('')+'</div></div>'+
+    '<div class="card"><h2>'+L('লাইটনার বক্স','Leitner boxes')+'</h2><div class="bars">'+(function(){var m=Math.max.apply(null,s.box.concat([1]));return s.box.map(function(v){return '<div title="'+v+'"><i style="height:'+(v/m*100).toFixed(1)+'%;background:var(--warn)"></i></div>';}).join('');})()+'</div>'+
+    '<div class="axis">'+s.box.map(function(v,i){return '<span>'+L('বক্স ','Box ')+N(i+1)+'<br>'+N(v)+'</span>';}).join('')+'</div>'+
+    '<p class="muted small" style="margin-top:10px">'+L('সঠিক উত্তর দিলে কার্ড এক বক্স উপরে ওঠে, ভুল হলে বক্স ১-এ নেমে যায়। দুর্বল শব্দ প্র্যাকটিসে নিচের বক্সের কার্ড আগে আসে।','A correct answer moves a card up one box; a miss sends it back to box 1.')+'</p></div></section>';
+  return h;
+}
+function todayView(){
+  var tp=todayPlan(),nb=tp.dueCnt+tp.newIds.length,backlog=tp.dueIds.length-tp.dueCnt,nn=tp.newIds.length;
+  var mins=Math.max(nb?1:0,Math.round(tp.estSec/60));
+  var readDone=!!(ST.rd&&ST.rd.day===dayIdx()&&nn>0&&ST.rd.n>=nn);
+  function cell(k,v,sub){return '<div class="ts"><div class="v">'+v+'</div><div class="k">'+k+'</div><div class="s">'+(sub||'&nbsp;')+'</div></div>';}
+  var h='<h1>'+L('আজকের রিভিউ','Daily revision')+'</h1><section class="card lift today"><div class="tstats">'+
+    cell(L('রিভিউ বাকি','Reviews due'),N(tp.dueCnt),backlog>0?'+'+N(backlog)+L(' পরে',' later'):'')+
+    cell(L('নতুন শব্দ','New words'),N(nn),L('টার্গেট ','Target ')+N(tp.quota))+
+    cell(L('সময় (মিনিট)','Minutes'),nb?'~'+N(mins):'—',L('আন্দাজ','estimate'))+'</div>'+
+    '<div class="step"><span class="sn">'+L('১','1')+'</span><div class="sb"><b>'+L('নতুন শব্দ পড়ুন','Read the new words')+'</b><span class="small muted">'+
+      (nn?N(nn)+L('টা শব্দ সিরিয়ালে একসাথে','  words in one list, in order')+(readDone?' · <span class="ok">'+L('✓ পড়া হয়েছে','✓ read')+'</span>':''):L('আজকের নতুন শব্দ শেষ','No new words left today'))+'</span></div>'+
+      '<div class="sa"><button class="btn'+(readDone?'':' pri')+'" data-a="learn"'+(nn?'':' disabled')+'>'+(readDone?L('আবার পড়ুন','Read again'):L('পড়তে শুরু করুন','Start reading'))+'</button><button class="btn" data-a="extra">'+L('নিজের মতো আরও শব্দ','Pick more words')+'</button></div></div>'+
+    '<div class="step"><span class="sn">'+L('২','2')+'</span><div class="sb"><b>'+L('রিভিউ ও টেস্ট','Review and test')+'</b></div><div class="sa"><div class="chips">'+
+    [['flash',L('ফ্ল্যাশকার্ড','Flashcards')],['mcq','MCQ'],['type',L('লিখে উত্তর','Type answer')]].map(function(m){return '<button class="chip'+(UI.fmt===m[0]?' on':'')+'" data-a="fmt" data-v="'+m[0]+'">'+m[1]+'</button>';}).join('')+'</div>'+
+    '<button class="btn'+(readDone||!nn?' pri':'')+'" data-a="startDaily"'+(nb?'':' disabled')+'>'+L('শুরু করুন','Start')+'</button></div></div></section>'+
+    '<section class="card flat note"><ul><li>'+L('আগে নতুন শব্দগুলো পড়ে নিন, তারপর টেস্ট দিন।','Read the new words first, then take the test.')+'</li>'+
+    '<li>'+L('রিভিউ আসে ১, ৩, ৭, ১৪, ৩০ দিন পরে।','Reviews come back after 1, 3, 7, 14 and 30 days.')+'</li>'+
+    '<li>'+L('রিভিউ জমে গেলে নতুন শব্দ নিজে থেকেই কমে।','If reviews pile up, new words are cut back automatically.')+'</li></ul></section>';
+  return h;
+}
+function learnIds(){return UI.learnIds||todayPlan().newIds;}
+function learnView(){
+  var ids=learnIds(),custom=!!UI.learnIds;
+  if(!ids.length)return '<div class="stage"><div class="sess-top"><button class="ib" data-a="learnBack" aria-label="'+L('পিছনে','Back')+'">'+ICON_BACK+'</button></div><div class="card empty">'+L('আজকের নতুন শব্দ শেষ।','No new words left for today.')+'</div></div>';
+  var h='<div class="stage learn"><div class="sess-top"><button class="ib" data-a="learnBack" aria-label="'+L('পিছনে','Back')+'">'+ICON_BACK+'</button><h1 style="font-size:19px;flex:1">'+(custom?L('বাছাই করা শব্দ','Your picks'):L('নতুন শব্দ','New words'))+' · '+N(ids.length)+L('টা',' ')+'</h1></div>'+
+   '<label class="switch small muted"><input type="checkbox" id="lcover" data-a="lcover"'+(UI.cover?' checked':'')+'><span>'+L('উত্তর ঢেকে রাখুন (নিজেকে যাচাই করতে)','Cover answers (to test yourself)')+'</span></label>'+
+   '<section class="card flat" style="padding:4px 14px 8px"><ol class="lnl">';
+  ids.forEach(function(id,i){
+    var e=BYID[id],a=e.items?e.items.join(', '):e.a,c=ST.cards[id],star=c&&c.star,hid=UI.cover&&!UI.rev[id];
+    h+='<li class="ln"><span class="no">'+N(i+1)+'</span><div class="lb"><div class="q">'+esc(e.q)+'</div>'+
+      (hid?'<button class="hide" data-a="lrev" data-id="'+id+'">'+L('ট্যাপ করে উত্তর দেখুন','Tap to show the answer')+'</button>':'<div class="a">'+esc(a)+'</div>')+
+      '<div class="meta"><span class="tag cat">'+esc(cn(e.cat))+'</span>'+(e.unc?'<span class="tag unc">'+L('সন্দেহ আছে','Unclear in source')+'</span>':'')+'</div></div>'+
+      '<button class="star'+(star?' on':'')+'" data-a="star" data-id="'+id+'" aria-label="'+L('তারকা','Star')+'" aria-pressed="'+(star?'true':'false')+'">'+(star?'★':'☆')+'</button></li>';
+  });
+  h+='</ol></section><div class="dock"><button class="btn" data-a="learnLater">'+L('পরে টেস্ট দেব','Test later')+'</button><button class="btn pri" data-a="learnDone">'+L('পড়া শেষ, টেস্ট দিন','Done, start test')+'</button></div></div>';
+  return h;
+}
+function extraPool(){
+  var excl=new Set(todayPlan().newIds),cats=UI.ex.cats.length?UI.ex.cats:DISPCATS.map(function(c){return c.id;});
+  return getOrder().filter(function(id){var c=ST.cards[id];return !excl.has(id)&&!(c&&c.n)&&cats.indexOf(P(BYID[id].cat))>=0;});
+}
+function exInfo(){
+  var n=extraPool().length,k=Math.min(UI.ex.count,n);
+  return n?L('এই ক্যাটাগরিতে নতুন শব্দ আছে ','New words available: ')+N(n)+L('টা · পড়া হবে ',' · you will read ')+N(k)+L('টা',''):L('এই ক্যাটাগরিতে আর নতুন শব্দ নেই।','No new words left in this selection.');
+}
+function extraView(){
+  var all=UI.ex.cats.length===0;
+  return '<div class="sess-top"><button class="ib" data-a="go" data-r="today" aria-label="'+L('পিছনে','Back')+'">'+ICON_BACK+'</button><h1 style="font-size:19px;flex:1">'+L('নিজের পছন্দের শব্দ','Pick your own words')+'</h1></div>'+
+   '<section class="card" style="display:grid;gap:16px"><div class="fieldset"><label class="f">'+L('কোন ক্যাটাগরি (না বাছলে সব)','Categories (none selected = all)')+'</label><div class="chips">'+
+   '<button class="chip'+(all?' on':'')+'" data-a="exAll">'+L('সব','All')+'</button>'+DISPCATS.map(function(c){return '<button class="chip'+(UI.ex.cats.indexOf(c.id)>=0?' on':'')+'" data-a="exCat" data-v="'+c.id+'">'+cn(c.id)+'</button>';}).join('')+'</div></div>'+
+   '<div class="fieldset"><label class="f" for="excount">'+L('কয়টা শব্দ','How many words')+'</label><div class="row">'+
+   [10,20,30,50,100].map(function(n){return '<button class="chip'+(UI.ex.count===n?' on':'')+'" data-a="exCount" data-v="'+n+'">'+N(n)+'</button>';}).join('')+
+   '<input type="number" id="excount" min="1" max="500" inputmode="numeric" value="'+UI.ex.count+'" style="width:96px;min-height:36px;padding:4px 10px" aria-label="'+L('নিজের সংখ্যা','Custom number')+'"></div></div>'+
+   '<div class="fieldset"><label class="f">'+L('ক্রম','Order')+'</label><div class="chips">'+[['seq',L('ফাইলের ক্রমে','In book order')],['rand',L('এলোমেলো','Random')]].map(function(m){return '<button class="chip'+(UI.ex.order===m[0]?' on':'')+'" data-a="exOrder" data-v="'+m[0]+'">'+m[1]+'</button>';}).join('')+'</div></div>'+
+   '<p class="small muted" id="exinfo">'+exInfo()+'</p>'+
+   '<div class="row"><button class="btn pri" id="exgo" data-a="exGo">'+L('পড়তে শুরু করুন','Start reading')+'</button></div></section>'+
+   '<section class="card flat note"><ul><li>'+L('এগুলো আজকের প্ল্যানের বাইরের শব্দ, তাই প্ল্যানের নতুন শব্দ কমবে না।','These are on top of today\'s plan, so the planned new words stay as they are.')+'</li>'+
+   '<li>'+L('শুধু যেগুলো এখনো পড়া হয়নি সেগুলোই আসবে। পড়া শব্দের রিভিউ আগের মতো চলবে।','Only words you have not studied yet appear. Studied words keep their review schedule.')+'</li></ul></section>';
+}
+function practiceView(){
+  var selAll=UI.cats.length===0;
+  var h='<h1>'+L('প্র্যাকটিস','Practice')+'</h1><section class="card"><div class="grid g2"><div class="fieldset"><label class="f">'+L('ক্যাটাগরি','Categories')+'</label><div class="chips">'+
+    '<button class="chip'+(selAll?' on':'')+'" data-a="catAll">'+L('সব','All')+'</button>'+DISPCATS.map(function(c){return '<button class="chip'+(UI.cats.indexOf(c.id)>=0?' on':'')+'" data-a="cat" data-v="'+c.id+'">'+cn(c.id)+'</button>';}).join('')+'</div></div>'+
+    '<div class="grid" style="gap:14px"><div class="fieldset"><label class="f">'+L('কোন শব্দগুলো','Which words')+'</label><div class="chips">'+
+    [['any',L('যেকোনো','Any')],['due',L('রিভিউ বাকি','Due')],['new',L('নতুন','New')],['seen',L('দেখা','Seen')]].map(function(m){return '<button class="chip'+(UI.scope===m[0]?' on':'')+'" data-a="scope" data-v="'+m[0]+'">'+m[1]+'</button>';}).join('')+'</div></div>'+
+    '<div class="fieldset"><label class="f">'+L('কয়টা','How many')+'</label><div class="chips">'+[10,20,30,50].map(function(n){return '<button class="chip'+(UI.count===n?' on':'')+'" data-a="count" data-v="'+n+'">'+N(n)+'</button>';}).join('')+'</div></div></div></div>'+
+    '<p class="muted small" style="margin-top:12px">'+L('রিভিউয়ের সময় হওয়ার আগে ঠিক উত্তর দিলে শিডিউল বদলায় না; ভুল হলে শব্দটি আবার রিভিউতে আসে।','A correct answer before a card is due leaves its schedule alone; a miss always brings it back.')+'</p></section>';
+  h+='<section class="grid g4">'+
+   [['flash',L('ফ্ল্যাশকার্ড','Flashcards'),L('আগে নিজে মনে করুন, তারপর উত্তর দেখে নিজেই রেট দিন।','Recall first, reveal, then rate yourself.')],
+    ['mcq','MCQ',L('চারটি অপশন থেকে সঠিকটি বেছে নিন।','Pick the right answer from four options.')],
+    ['type',L('লিখে উত্তর','Type the answer'),L('নিজে লিখুন; বানান ভুল হলে ধরা পড়বে।','Type it yourself; near-miss spellings are caught.')]].map(function(m){
+     return '<div class="card mode"><h3>'+m[1]+'</h3><p>'+m[2]+'</p><button class="btn pri sm" data-a="startPractice" data-v="'+m[0]+'">'+L('শুরু','Start')+'</button></div>';}).join('')+
+   '<div class="card mode"><h3>'+L('দুর্বল শব্দ','Weak words')+'</h3><p>'+L('যেগুলোতে ভুল হয়েছে, কঠিন লেগেছে বা তারকা দিয়েছেন।','Words you missed, found hard, or starred.')+'</p><div class="chips">'+
+    [['flash',L('কার্ড','Cards')],['mcq','MCQ'],['type',L('লিখে','Type')]].map(function(m){return '<button class="chip'+(UI.weakFmt===m[0]?' on':'')+'" data-a="wfmt" data-v="'+m[0]+'">'+m[1]+'</button>';}).join('')+'</div>'+
+    '<button class="btn pri sm" data-a="weak">'+L('শুরু','Start')+' ('+N(ENTRIES.filter(function(e){return isWeak(e.id);}).length)+')</button></div></section>';
+  return h;
+}
+function browseFilter(){
+  var q=norm(BR.q),list=[];
+  ENTRIES.forEach(function(e,i){
+    if(BR.cat!=='all'&&P(e.cat)!==BR.cat)return;
+    if(BR.letter&&e._letter!==BR.letter)return;
+    if(BR.st!=='all'){if(BR.st==='diff'){if(!isDifficult(e.id))return;}else if(BR.st==='star'){if(!(ST.cards[e.id]&&ST.cards[e.id].star))return;}else if(status(e.id)!==BR.st)return;}
+    var sc=0;
+    if(q){if(e._hay.indexOf(q)<0)return;sc=e._nq===q?0:e._nq.indexOf(q)===0?1:e._nq.indexOf(q)>0?2:e._na.indexOf(q)>=0?3:4;}
+    list.push({e:e,sc:sc,i:i});
+  });
+  if(q)list.sort(function(a,b){return a.sc-b.sc||a.i-b.i;});
+  return list;
+}
+function rowHTML(e){
+  var st=status(e.id),c=ST.cards[e.id],open=BR.open===e.id;
+  var a=e.items?e.items.join(', '):e.a;
+  var h='<div class="item" data-a="open" data-id="'+e.id+'"><span class="dot c-'+st+'" title="'+stLabel(st)+'"></span><div class="body"><div class="q">'+esc(e.q)+'</div><div class="a">'+esc(a.length>140&&!open?a.slice(0,138)+'…':a)+'</div>'+
+    '<div class="meta"><span class="tag cat">'+esc(cn(e.cat))+'</span>'+(e.unc?'<span class="tag unc">'+L('সন্দেহ আছে','Unclear in source')+'</span>':'')+(isDifficult(e.id)?'<span class="tag diff">'+L('কঠিন','Difficult')+'</span>':'')+(c&&c.star?'<span class="tag unc">★</span>':'')+'</div>';
+  if(open){
+    h+='<div class="det" data-a="none">'+
+     (e.notes?'<p class="small"><b>'+L('ফাইলের নোট: ','Source note: ')+'</b>'+esc(e.notes.join('; '))+'</p>':'')+
+     '<p class="small muted">'+stLabel(st)+(c&&c.n?' · '+L('উত্তর ','answers ')+N(c.n)+L(', সঠিক ',', correct ')+N(c.c)+L(', পরের রিভিউ ',', next review ')+dateShort(c.due):' · '+L('এখনো পড়া হয়নি','not studied yet'))+'</p>'+
+     '<div class="row"><button class="btn sm" data-a="star" data-id="'+e.id+'">'+(c&&c.star?L('তারকা সরান','Remove star'):L('তারকা দিন','Star this'))+'</button></div></div>';
+  }
+  return h+'</div></div>';
+}
+function browseListHTML(){
+  var list=browseFilter(),shown=list.slice(0,BR.limit);
+  return '<p class="muted small num cnt">'+N(list.length)+'/'+N(ENTRIES.length)+'</p>'+
+    (shown.length?'<div class="list">'+shown.map(function(x){return rowHTML(x.e);}).join('')+'</div>':'<div class="empty">'+L('কিছু পাওয়া যায়নি।','Nothing found.')+'</div>')+
+    (list.length>shown.length?'<div class="row" style="justify-content:center;margin-top:12px"><button class="btn" data-a="more50">'+L('আরও দেখান','Show more')+'</button></div>':'');
+}
+function lettersFor(){
+  var set={};ENTRIES.forEach(function(e){if(BR.cat==='all'||P(e.cat)===BR.cat)set[e._letter]=1;});
+  return Object.keys(set).sort(function(a,b){var x=ORDER_L.indexOf(a),y=ORDER_L.indexOf(b);if(x<0)x=a.length&&/[A-Z]/.test(a)?100+a.charCodeAt(0):99;if(y<0)y=b.length&&/[A-Z]/.test(b)?100+b.charCodeAt(0):99;return x-y;});
+}
+function searchView(){
+  var ls=lettersFor();
+  return '<section class="card sbox"><input type="search" id="bq" value="'+esc(BR.q)+'" placeholder="'+L('বাংলা বা ইংরেজিতে খুঁজুন','Search in Bengali or English')+'" aria-label="'+L('অনুসন্ধান','Search')+'" autocomplete="off">'+
+   '<div class="filters"><select id="bcat" aria-label="'+L('ক্যাটাগরি','Category')+'"><option value="all">'+L('সব ক্যাটাগরি','All categories')+'</option>'+DISPCATS.map(function(c){return '<option value="'+c.id+'"'+(BR.cat===c.id?' selected':'')+'>'+esc(cn(c.id))+'</option>';}).join('')+'</select>'+
+   '<select id="bl" aria-label="'+L('অক্ষর','Letter')+'"><option value="">'+L('অক্ষর','Letter')+'</option>'+ls.map(function(l){return '<option value="'+esc(l)+'"'+(BR.letter===l?' selected':'')+'>'+esc(l)+'</option>';}).join('')+'</select>'+
+   '<select id="bst" aria-label="'+L('অবস্থা','Status')+'">'+[['all',L('অবস্থা','Status')],['new',L('নতুন','New')],['learning',L('শিখছি','Learning')],['review',L('রিভিউ','Review')],['mastered',L('মুখস্থ','Mastered')],['diff',L('কঠিন','Difficult')],['star',L('তারকা','Starred')]].map(function(o){return '<option value="'+o[0]+'"'+(BR.st===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div></section>'+
+   '<section class="card" id="bres">'+browseListHTML()+'</section>';
+}
+function planView(){
+  var pl=buildPlan(),p=pl.p,tp=pl.tp,today=dayIdx();
+  var h='<h1>'+L('পড়ার প্ল্যান','Study planner')+'</h1>';
+  h+='<section class="card lift"><div class="grid g3">'+statTile(L('বাকি নতুন শব্দ','New words left'),N(pl.unseen),L('মোট ','of ')+N(ENTRIES.length))+
+    statTile(L('রোজ নতুন শব্দ','New words a day'),N(pl.perDay),ST.set.newPerDay==='auto'?L('স্বয়ংক্রিয়','auto'):L('নিজে ঠিক করা','manual'))+
+    statTile(L('সব শব্দ শুরু করা শেষ হবে','All words started by'),pl.unseen?dateShort(pl.introDone):L('শেষ','Done'),pl.unseen?N(pl.introDone-today+1)+L(' দিন লাগবে',' days'):'')+
+    statTile(L('সব রিভিউ শেষ হবে','Full ladder done by'),pl.unseen?dateShort(pl.ladderDone):'—',L('৩০ দিনের রিভিউসহ','including the 30-day review'))+'</div>'+
+    '<div class="row" style="margin-top:16px;gap:16px"><div class="fieldset"><label class="f" for="ph">'+L('প্রতিদিন পড়ার সময়','Study time per day')+'</label><select id="ph" data-set="hours">'+[0.5,1,1.5,2,3,4].map(function(v){return '<option value="'+v+'"'+(ST.set.hours===v?' selected':'')+'>'+N(v)+L(' ঘণ্টা',' h')+'</option>';}).join('')+'</select></div>'+
+    '<div class="fieldset"><label class="f" for="pe">'+L('পরীক্ষার তারিখ (ঐচ্ছিক)','Exam date (optional)')+'</label><input type="date" id="pe" data-set="exam" value="'+esc(ST.set.exam)+'"></div></div></section>';
+  var per=p.per;
+  h+='<section class="card"><h2>'+L('এই হিসাব কীভাবে হলো','What the estimate is based on')+'</h2><p class="small muted">'+
+    L('নতুন শব্দ প্রতি ','New word: ')+fmtSec(p.tNew)+L(', রিভিউ প্রতি ',', review: ')+fmtSec(p.tRev)+L(', নির্ভুলতা ',', accuracy ')+N(Math.round(p.acc*100))+'%. '+
+    L('প্রতিটি শব্দ গড়ে ','Each word needs about ')+N(p.rpc.toFixed(1))+L(' বার রিভিউ হয়, তাই শব্দপ্রতি মোট ',' reviews, so about ')+fmtSec(per)+L(' লাগে। ',' in total. ')+
+    (p.measured?L('এগুলো আপনার নিজের পড়ার গতি থেকে নেওয়া।','These come from your own sessions.'):L('এখনো যথেষ্ট ডেটা নেই, তাই ধরে নেওয়া মান ব্যবহার হচ্ছে। কয়েকদিন পড়ার পর নিজে থেকেই ঠিক হয়ে যাবে।','Not enough data yet, so default values are used; they adjust after a few sessions.'))+'</p></section>';
+  if(ST.set.exam){
+    var ex=Math.floor(Date.parse(ST.set.exam+'T00:00:00Z')/86400000),left=ex-today,dl=left-REV_OFF[REV_OFF.length-1];
+    var need=dl>0?Math.ceil(pl.unseen/dl):null;
+    h+='<section class="card"><h2>'+L('পরীক্ষার আগে সময় হবে কি না','Exam check')+'</h2><p>'+(left<=0?L('পরীক্ষার তারিখ পেরিয়ে গেছে বা আজই।','The exam date is today or past.'):
+      L('পরীক্ষা ','Exam in ')+N(left)+L(' দিন পরে। ৫৫ দিনের রিভিউ চক্র শেষ করতে শেষ নতুন শব্দ ',' days. To finish the full review ladder, the last new word must start by ')+dateShort(ex-REV_OFF[REV_OFF.length-1])+'.')+'</p>'+
+      (need!=null?'<p class="'+(need<=pl.perDay?'ok':'badc')+'" style="margin-top:8px">'+L('রোজ ',' Needed: ')+N(need)+L(' টি নতুন শব্দ দরকার (প্রায় ',' new words a day (about ')+fmtSec(need*per)+L(' প্রতিদিন)।',' a day). ')+(need<=pl.perDay?L('আপনার বর্তমান গতিতে সম্ভব।','That fits your current pace.'):L('বর্তমান গতির চেয়ে বেশি, সময় বাড়াতে হবে।','That is more than your current pace; add study time.'))+'</p>':
+       (left>0?'<p class="badc" style="margin-top:8px">'+L('সময় অপর্যাপ্ত: সম্পূর্ণ রিভিউ চক্রের জন্য যথেষ্ট দিন নেই। পুরো ফাইল শেষ করা যাবে না, তাই কম গুরুত্বপূর্ণ বিভাগ বাদ দিন।','Not enough days left for the full ladder.')+'</p>':''))+'</section>';
+  }
+  var rows=PL.all?pl.rows:pl.rows.slice(0,14);
+  h+='<section class="card"><h2>'+L('দিনের হিসাবে টার্গেট','Daily targets')+'</h2>';
+  if(!rows.length)h+='<div class="empty">'+L('সব শব্দ ইতোমধ্যে শুরু করা হয়েছে।','Every entry has already been started.')+'</div>';
+  else h+='<div class="scroll"><table><thead><tr><th>'+L('দিন','Day')+'</th><th>'+L('তারিখ','Date')+'</th><th class="r">'+L('নতুন','New')+'</th><th class="r">'+L('রিভিউ (আন্দাজ)','Reviews (est.)')+'</th><th class="r">'+L('সময়','Time')+'</th><th>'+L('ক্যাটাগরি','Categories')+'</th></tr></thead><tbody>'+
+    rows.map(function(r){return '<tr'+(r.k===0?' style="background:var(--accent-soft)"':'')+'><td class="num">'+N(r.k+1)+'</td><td>'+dateShort(r.day)+(r.k===0?' ('+L('আজ','today')+')':'')+'</td><td class="r num">'+N(r.n)+'</td><td class="r num">'+N(r.rev)+'</td><td class="r num">'+fmtSec(r.sec)+'</td><td class="small">'+Object.keys(r.comp).map(function(c){return esc(cn(c))+' ×'+N(r.comp[c]);}).join(', ')+'</td></tr>';}).join('')+'</tbody></table></div>'+
+    (pl.rows.length>14?'<div class="row" style="justify-content:center;margin-top:12px"><button class="btn sm" data-a="plall">'+(PL.all?L('কম দেখান','Show fewer'):L('সব ',  'Show all ')+N(pl.rows.length)+L(' দিন দেখান',' days'))+'</button></div>':'');
+  h+='<p class="muted small" style="margin-top:10px">'+L('রিভিউ সংখ্যা ধরে নেওয়া হয়েছে যে প্রতিটি শব্দ ১, ৪, ১১, ২৫ ও ৫৫তম দিনে (১, ৩, ৭, ১৪, ৩০ দিনের ব্যবধানে) রিভিউ হবে। ভুল উত্তর দিলে বাস্তবে কিছু বেশি হবে।','Reviews assume each word returns on days 1, 4, 11, 25 and 55 after it is introduced (1, 3, 7, 14, 30 day gaps). Misses add a few more in practice.')+'</p></section>';
+  return h;
+}
+function moreView(){
+  return '<h1>'+L('আরও','More')+'</h1><section class="grid g2"><div class="card mode"><h3>'+L('ডেটা রিপোর্ট','Data completeness report')+'</h3><p>'+L('ফাইল থেকে কতগুলো এন্ট্রি বের হয়েছে ও যাচাই হয়েছে।','How many entries were extracted from the file and verified.')+'</p><button class="btn pri sm" data-a="go" data-r="report">'+L('দেখুন','Open')+'</button></div>'+
+   '<div class="card mode"><h3>'+L('সেটিংস','Settings')+'</h3><p>'+L('ভাষা, থিম, পড়ার সময়, ব্যাকআপ।','Language, theme, study time, backup.')+'</p><button class="btn pri sm" data-a="go" data-r="prefs">'+L('খুলুন','Open')+'</button></div></section>';
+}
+function reportView(){
+  var live={};ENTRIES.forEach(function(e){live[e.cat]=(live[e.cat]||0)+1;});
+  var h='<h1>'+L('ডেটা সম্পূর্ণতার রিপোর্ট','Data completeness report')+'</h1>';
+  var allOk=REPORT.total_source===REPORT.total_extracted&&REPORT.total_extracted===REPORT.total_verified&&ENTRIES.length===REPORT.total_extracted;
+  h+='<section class="card lift"><div class="grid g3">'+statTile(L('ফাইলে সারি','Rows in file'),N(REPORT.total_source),L('আলাদা গণনা','counted independently'))+statTile(L('বের করা এন্ট্রি','Extracted'),N(REPORT.total_extracted),L('এখন সাইটে ','in this site now ')+N(ENTRIES.length))+statTile(L('হুবহু মিলেছে','Verified verbatim'),N(REPORT.total_verified),allOk?L('সব মিলেছে','all match'):L('অমিল আছে','mismatch'))+'</div></section>';
+  h+='<section class="card"><h2>'+L('বিভাগ অনুযায়ী','By section')+'</h2><div class="scroll"><table><thead><tr><th>'+L('বিভাগ','Section')+'</th><th class="r">'+L('ফাইলে','In file')+'</th><th class="r">'+L('বের হয়েছে','Extracted')+'</th><th class="r">'+L('যাচাই','Verified')+'</th><th class="r">'+L('সাইটে','On site')+'</th><th></th></tr></thead><tbody>'+
+    REPORT.categories.map(function(r){var ok=r.ok&&live[r.id]===r.extracted;return '<tr><td>'+esc(L(r.bn,r.en))+'</td><td class="r num">'+N(r.source_rows)+'</td><td class="r num">'+N(r.extracted)+'</td><td class="r num">'+N(r.verified)+'</td><td class="r num">'+N(live[r.id]||0)+'</td><td class="'+(ok?'ok':'badc')+'">'+(ok?'✓':'✕')+'</td></tr>';}).join('')+
+    '<tr><td><b>'+L('মোট','Total')+'</b></td><td class="r num"><b>'+N(REPORT.total_source)+'</b></td><td class="r num"><b>'+N(REPORT.total_extracted)+'</b></td><td class="r num"><b>'+N(REPORT.total_verified)+'</b></td><td class="r num"><b>'+N(ENTRIES.length)+'</b></td><td class="'+(allOk?'ok':'badc')+'">'+(allOk?'✓':'✕')+'</td></tr></tbody></table></div></section>';
+  h+='<section class="card"><h2>'+L('কীভাবে যাচাই করা হয়েছে','How it was checked')+'</h2><ul class="small" style="margin:0;padding-left:20px;display:grid;gap:6px">'+
+    '<li>'+L('"ফাইলে" সংখ্যা আলাদা কোডে গোনা হয়েছে (প্রতিটি ## অংশের টেবিল সারি বা বুলেট, হেডার ও বিভাজক বাদে)।','"In file" was counted by separate code (table rows or bullets in each ## section, minus headers and separators).')+'</li>'+
+    '<li>'+L('"যাচাই" মানে প্রতিটি এন্ট্রির বাংলা ও ইংরেজি লেখা মূল লাইনের সাথে অক্ষরে অক্ষরে মিলেছে এবং লাইনে আর কিছু বাকি নেই।','"Verified" means each entry\'s text matches its source line character for character and nothing else is left on that line.')+'</li>'+
+    '<li>'+L('কোনো শব্দ যোগ, অনুবাদ বা সংশোধন করা হয়নি। অনুসন্ধানের সময় শুধু তুলনার জন্য লেখা সাধারণীকরণ (NFC) হয়; দেখানো লেখা অবিকৃত।','Nothing was added, translated or corrected. Text is normalised (NFC) only for matching in search and typing; what you see is unchanged.')+'</li>'+
+    '<li>'+L('সীমা: এটি আপনার আপলোড করা Markdown ফাইলের সাথে মিল দেখায়। ছাপা বইয়ের সাথে বানান মেলানো যায়নি। ফাইলের নিজস্ব সন্দেহের তালিকা নিচে আছে।','Limit: this confirms a match with the Markdown you uploaded. It cannot confirm spelling against the printed book. The file\'s own doubts are listed below.')+'</li></ul></section>';
+  h+='<section class="card"><h2>'+L('ফাইলে অস্পষ্ট বলে চিহ্নিত এন্ট্রি','Entries the file itself marks as unclear')+'</h2><div class="scroll"><table><thead><tr><th>'+L('শব্দ','Entry')+'</th><th>'+L('উত্তর','Answer')+'</th><th>'+L('বিভাগ','Section')+'</th><th class="r">'+L('লাইন','Line')+'</th></tr></thead><tbody>'+
+    REPORT.flagged.map(function(f){return '<tr><td>'+esc(f.q)+'</td><td>'+esc(f.a.length>70?f.a.slice(0,68)+'…':f.a)+(f.notes.length?'<div class="muted small">'+esc(f.notes.join('; '))+'</div>':'')+'</td><td>'+esc(cn(f.cat))+'</td><td class="r num">'+N(f.line)+'</td></tr>';}).join('')+'</tbody></table></div><p class="muted small" style="margin-top:8px">'+L('এগুলো মূল ফাইলের মতোই রাখা হয়েছে। পরীক্ষার আগে বইয়ের সাথে মিলিয়ে নিন।','Kept exactly as in the file. Check these against the book before the exam.')+'</p></section>';
+  h+='<section class="card"><h2>'+L('একই শব্দ একাধিক সারিতে','Same word on more than one row')+'</h2><div class="scroll"><table><thead><tr><th>'+L('শব্দ','Word')+'</th><th>'+L('বিভাগ','Section')+'</th><th>'+L('উত্তরসমূহ','Answers')+'</th></tr></thead><tbody>'+
+    REPORT.duplicates.map(function(d){return '<tr><td>'+esc(d.q)+'</td><td>'+esc(cn(d.cat))+'</td><td>'+d.answers.map(esc).join(' | ')+'</td></tr>';}).join('')+'</tbody></table></div><p class="muted small" style="margin-top:8px">'+L('প্রতিটি সারি আলাদা এন্ট্রি হিসেবে রাখা হয়েছে। কুইজে এক শব্দের সব বৈধ উত্তরই সঠিক ধরা হয়।','Each row is kept as its own entry. In quizzes every valid answer for the same word counts as correct.')+'</p></section>';
+  var an=REPORT.anomalies;
+  h+='<section class="card flat"><h2>'+L('অক্ষর পরীক্ষা','Character check')+'</h2><p class="small muted">'+L('ফাইলে ইংরেজি অক্ষর শুধু পারিভাষিক বিভাগে আছে (অন্য বিভাগে ',' Latin letters appear only in the terminology section (other sections: ')+N(an.latin_in_bengali_sections.length)+L(' টি)। য়, ড়, ঢ় সব একই রূপে সংরক্ষিত ('," ). Letters য়, ড়, ঢ় are stored in one consistent form (")+N(an.decomposed_yy)+L(' বার), তাই অনুসন্ধানে বানানরূপের গরমিল হয় না।',' times), so search is not thrown off by variant encodings.')+'</p></section>';
+  return h;
+}
+function prefsView(){
+  var s=ST.set;
+  function sel(id,key,opts,val){return '<div class="fieldset"><label class="f" for="'+id+'">'+opts.label+'</label><select id="'+id+'" data-set="'+key+'">'+opts.o.map(function(o){return '<option value="'+o[0]+'"'+(String(val)===String(o[0])?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div>';}
+  var h='<h1>'+L('সেটিংস','Settings')+'</h1><section class="card"><div class="grid g2">'+
+   sel('s1','lang',{label:L('ভাষা','Language'),o:[['bn','বাংলা'],['en','English']]},s.lang)+
+   sel('s2','theme',{label:L('থিম','Theme'),o:[['auto',L('ডিভাইস অনুযায়ী','Follow device')],['light',L('হালকা','Light')],['dark',L('গাঢ়','Dark')]]},s.theme)+
+   sel('s3','hours',{label:L('প্রতিদিন পড়ার সময়','Study time per day'),o:[0.5,1,1.5,2,3,4].map(function(v){return [v,N(v)+L(' ঘণ্টা',' h')];})},s.hours)+
+   sel('s4','newPerDay',{label:L('দৈনিক নতুন শব্দ','New words per day'),o:[['auto',L('স্বয়ংক্রিয়','Automatic')]].concat([5,10,15,20,30,40,60,80,100].map(function(v){return [v,N(v)];}))},s.newPerDay)+
+   sel('s5','order',{label:L('নতুন শব্দ কোন ক্রমে আসবে','Order of new words'),o:[['source',L('ফাইলের ক্রমে','File order')],['mixed',L('ক্যাটাগরি মিশিয়ে','Mixed across categories')]]},s.order)+
+   sel('s6','dir',{label:L('প্রশ্নের দিক (বিপরীত শব্দ ও পরিভাষা)','Direction (antonyms and terms)'),o:[['forward',L('সোজা','Forward')],['reverse',L('উল্টো','Reverse')],['mixed',L('মিশ্র','Mixed')]]},s.dir)+
+   sel('s7','maxReviews',{label:L('একদিনে সর্বোচ্চ রিভিউ','Max reviews per day'),o:[40,80,120,200,300].map(function(v){return [v,N(v)];})},s.maxReviews)+
+   '</div><div class="grid" style="gap:12px;margin-top:16px"><label class="switch"><input type="checkbox" id="s8" data-set="interleave"'+(s.interleave?' checked':'')+'><span>'+L('ক্যাটাগরি মিশিয়ে দেখান','Interleave categories in a session')+'</span></label>'+
+   '<label class="switch"><input type="checkbox" id="s9" data-set="recall"'+(s.recall?' checked':'')+'><span>'+L('ফ্ল্যাশকার্ডে উত্তর দেখার আগে নিজে লিখে মনে করুন','Type your recall before revealing a flashcard')+'</span></label></div></section>';
+  h+='<section class="card"><h2>'+L('প্রোগ্রেস ব্যাকআপ','Back up your progress')+'</h2><p class="small muted">'+L('প্রোগ্রেস এই ব্রাউজারেই সেভ থাকে। অন্য ফোনে নিতে নিচের লেখাটি কপি করে সেখানে পেস্ট করুন।','Progress lives in this browser. To move it, copy the text below and paste it on the other device.')+'</p>'+
+   '<div class="row" style="margin:10px 0"><button class="btn sm" data-a="export">'+L('ব্যাকআপ তৈরি করুন','Create backup')+'</button><button class="btn sm" data-a="copyBackup">'+L('কপি','Copy')+'</button><button class="btn sm" data-a="import">'+L('রিস্টোর করুন','Restore from this text')+'</button></div>'+
+   '<textarea id="bk" aria-label="'+L('ব্যাকআপ','Backup')+'" spellcheck="false">'+esc(IMP.text)+'</textarea></section>';
+  h+='<section class="card"><h2>'+L('সব প্রোগ্রেস মুছে ফেলুন','Reset progress')+'</h2><p class="small muted">'+L('এটি ফেরানো যায় না।','This cannot be undone.')+'</p><div class="row" style="margin-top:10px">'+
+   (IMP.confirm?'<button class="btn sm" style="border-color:var(--bad);color:var(--bad)" data-a="resetYes">'+L('হ্যাঁ, মুছে ফেলুন','Yes, erase everything')+'</button><button class="btn sm" data-a="resetNo">'+L('না','Cancel')+'</button>':'<button class="btn sm" data-a="resetAsk">'+L('মুছুন','Erase')+'</button>')+'</div></section>';
+  return h;
+}
+
+/* ---------- study session ---------- */
+function prepCard(){
+  var id=S.queue[S.i],e=BYID[id],dir=ST.set.dir,rev=false;
+  if(canRev(e))rev=dir==='reverse'||(dir==='mixed'&&Math.random()<0.5);
+  var v=view(e,rev);
+  S.cur={id:id,e:e,rev:rev,v:v,start:Date.now(),phase:'q',pick:null,tres:null,recall:'',mc:null,long:false};
+  if(S.mode==='mcq')S.cur.mc=buildMcq(e,rev);
+  if(S.mode==='type')S.cur.long=!v.items&&norm(v.a).length>24;
+}
+function allowed(e,v){var s=new Set(VALID[vkey(e,v)]||[]);(v.items?v.items.map(norm):altsOf(v.a)).forEach(function(x){s.add(x);});return s;}
+function buildMcq(e,rev){
+  var v=view(e,rev),valid=allowed(e,v),correct=v.items?pick(v.items):v.a;
+  var pool=ENTRIES.filter(function(x){return x.cat===e.cat&&x.id!==e.id&&(!rev||canRev(x));});
+  shuffle(pool);
+  var cands=[],seen=new Set([norm(correct)]);
+  for(var i=0;i<pool.length&&cands.length<40;i++){
+    var v2=view(pool[i],rev),t=v2.items?pick(v2.items):v2.a,n=norm(t);
+    if(!n||seen.has(n)||valid.has(n))continue;
+    seen.add(n);cands.push(t);
+  }
+  cands.sort(function(a,b){return Math.abs(a.length-correct.length)-Math.abs(b.length-correct.length)+(Math.random()-0.5)*4;});
+  var opts=[{t:correct,ok:true}].concat(cands.slice(0,3).map(function(t){return {t:t,ok:false};}));
+  return {opts:shuffle(opts),correct:correct};
+}
+function checkTyped(e,v,input){
+  var x=norm(input);if(!x)return {r:'empty'};
+  var al=allowed(e,v);if(al.has(x))return {r:'ok'};
+  var res={r:'bad'};
+  al.forEach(function(w){if(res.r==='bad'&&w.length>=4&&Math.abs(w.length-x.length)<=1&&lev(w,x)<=1)res={r:'near',w:w};});
+  return res;
+}
+function startSession(mode,ids,o){
+  o=o||{};
+  if(!ids.length){toast(L('এই সিলেকশনে কোনো শব্দ নেই।','No words match that selection.'));return;}
+  S={mode:mode,queue:ids.slice(),i:0,done:new Set(),results:[],t0:Date.now(),from:o.from||'practice',kind:o.kind||'practice',title:o.title||'',finished:false};
+  prepCard();route='session';window.scrollTo(0,0);render();
+}
+function recordFirst(q){
+  var c=S.cur;if(S.done.has(c.id))return;
+  S.done.add(c.id);applyGrade(c.id,q,Date.now()-c.start,S.kind==='extra');
+  S.results.push({id:c.id,q:q,rev:c.rev});
+}
+function advance(){
+  S.i++;if(S.i>=S.queue.length){S.finished=true;render();return;}
+  prepCard();window.scrollTo(0,0);render();
+}
+function rate(q){
+  var c=S.cur;recordFirst(q);
+  if(q<3&&S.queue.length<S.queue.length+8&&(S.requeued||(S.requeued={}))&&!S.requeued[c.id]){S.requeued[c.id]=1;S.queue.splice(Math.min(S.i+4,S.queue.length),0,c.id);}
+  advance();
+}
+function backHTML(c,v){
+  var e=c.e;
+  var a=v.items?'<ul class="tags">'+v.items.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'<div class="ans">'+esc(v.a)+'</div>';
+  return a+(e.notes?'<p class="small muted">'+L('ফাইলের নোট: ','Source note: ')+esc(e.notes.join('; '))+'</p>':'');
+}
+function sessionTop(){
+  var tot=S.queue.length;
+  return '<div class="sess-top"><button class="ib" data-a="quit" aria-label="'+L('বন্ধ করুন','Close')+'">'+ICON_X+'</button><div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+S.i+'"><i style="width:'+(S.i/tot*100).toFixed(1)+'%"></i></div><span class="small muted num">'+N(Math.min(S.i+1,tot))+'/'+N(tot)+'</span></div>';
+}
+function cardHead(c){
+  var e=c.e,st=status(e.id),star=ST.cards[e.id]&&ST.cards[e.id].star;
+  return '<div class="fc-meta"><span class="tag">'+esc(cn(e.cat))+'</span><span class="tag '+st+'">'+stLabel(st)+'</span>'+(e.unc?'<span class="tag unc">'+L('সন্দেহ আছে','Unclear in source')+'</span>':'')+
+    '<span style="margin-left:auto"></span><button class="star'+(star?' on':'')+'" data-a="star" data-id="'+e.id+'" aria-label="'+L('তারকা','Star')+'" aria-pressed="'+(star?'true':'false')+'">'+(star?'★':'☆')+'</button></div>';
+}
+function rateButtons(c){
+  var today=dayIdx(),cc=ST.cards[c.id];
+  function lab(q){var n=sched(cc,q,today);var due=!cc||!cc.n||cc.due<=today;return q<3?fmtDays(1):(due?fmtDays(n.iv):'—');}
+  return '<div class="rates">'+[[1,L('আবার','Again'),'r1'],[3,L('কঠিন','Hard'),'r3'],[4,L('ভালো','Good'),'r4'],[5,L('সহজ','Easy'),'r5']].map(function(r,i){return '<button class="'+r[2]+'" data-a="rate" data-q="'+r[0]+'">'+r[1]+'<span>'+lab(r[0])+'</span></button>';}).join('')+'</div>';
+}
+function flashHTML(){
+  var c=S.cur,v=c.v,h=sessionTop()+'<article class="fc">'+cardHead(c)+'<div class="fc-prompt">'+promptOf(c.e.cat,c.rev)+'</div><div class="fc-q">'+esc(v.q)+'</div>';
+  if(c.phase==='q'){
+    if(ST.set.recall)h+='<textarea id="rc" placeholder="'+L('নিজে মনে করে লিখুন...','Write what you remember...')+'" aria-label="'+L('আপনার উত্তর','Your answer')+'">'+esc(c.recall)+'</textarea>';
+    h+='<div class="row"><button class="btn pri" data-a="reveal">'+L('উত্তর দেখুন','Show answer')+'</button></div></article>';
+  }else{
+    var rc='';
+    if(ST.set.recall&&c.recall.trim()){var r=checkTyped(c.e,v,c.recall);rc='<div class="res '+(r.r==='ok'?'good':r.r==='near'?'warn':'bad')+'">'+L('আপনার উত্তর: ','Your answer: ')+esc(c.recall)+' — '+(r.r==='ok'?L('মিলেছে','match'):r.r==='near'?L('প্রায় মিলেছে (বানান দেখুন)','close (check spelling)'):L('মেলেনি','no match'))+'</div>';}
+    h+='<div class="fc-a">'+rc+backHTML(c,v)+'</div></article>'+rateButtons(c);
+  }
+  return h;
+}
+function mcqHTML(){
+  var c=S.cur,h=sessionTop()+'<article class="fc">'+cardHead(c)+'<div class="fc-prompt">'+promptOf(c.e.cat,c.rev)+'</div><div class="fc-q">'+esc(c.v.q)+'</div><div class="opts">';
+  c.mc.opts.forEach(function(o,i){
+    var cls='';if(c.pick!==null){if(o.ok)cls=' good';else if(i===c.pick)cls=' bad';}
+    h+='<button class="opt'+cls+'" data-a="pick" data-i="'+i+'"'+(c.pick!==null?' disabled':'')+'><kbd>'+N(i+1)+'</kbd><span>'+esc(o.t)+'</span></button>';
+  });
+  h+='</div>';
+  if(c.pick!==null){
+    var ok=c.mc.opts[c.pick].ok;
+    h+='<div class="res '+(ok?'good':'bad')+'">'+(ok?L('সঠিক','Correct'):L('ভুল','Not quite'))+'</div><div class="fc-a">'+backHTML(c,c.v)+'</div><div class="row"><button class="btn pri" data-a="next">'+L('পরের','Next')+'</button></div>';
+  }
+  return h+'</article>';
+}
+function typeHTML(){
+  var c=S.cur,h=sessionTop()+'<article class="fc">'+cardHead(c)+'<div class="fc-prompt">'+promptOf(c.e.cat,c.rev)+(c.v.items?' '+L('(যেকোনো একটি লিখুন)','(type any one)'):'')+'</div><div class="fc-q">'+esc(c.v.q)+'</div>';
+  if(!c.tres){
+    h+='<div class="fieldset"><input type="text" id="ti" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="'+L('এখানে লিখুন','Type here')+'" aria-label="'+L('উত্তর','Answer')+'"></div><div class="row"><button class="btn pri" data-a="submit">'+L('চেক করুন','Check')+'</button><button class="btn" data-a="skip">'+L('জানি না','Don\'t know')+'</button></div></article>';
+  }else{
+    var t=c.tres;
+    if(c.long)h+='<div class="res warn">'+L('আপনার লেখা: ','You wrote: ')+esc(c.tres.text||'—')+'</div><div class="fc-a">'+backHTML(c,c.v)+'</div></article>'+rateButtons(c);
+    else{
+      h+='<div class="res '+(t.r==='ok'?'good':t.r==='near'?'warn':'bad')+'">'+(t.r==='ok'?L('সঠিক','Correct'):t.r==='near'?L('প্রায় ঠিক, বানান মিলিয়ে দেখুন','Close, check the spelling'):L('ভুল','Incorrect'))+(t.text?' · '+esc(t.text):'')+'</div><div class="fc-a">'+backHTML(c,c.v)+'</div><div class="row"><button class="btn pri" data-a="next">'+L('পরের','Next')+'</button></div></article>';
+    }
+  }
+  return h;
+}
+function summaryHTML(){
+  var r=S.results,ok=r.filter(function(x){return x.q>=3;}).length,sec=(Date.now()-S.t0)/1000;
+  var miss=r.filter(function(x){return x.q<3;});
+  var h='<div class="stage"><h1>'+L('শেষ! চমৎকার','Session complete')+'</h1><section class="card lift"><div class="grid g3">'+statTile(L('শব্দ','Words'),N(r.length),'')+statTile(L('সঠিক','Correct'),r.length?N(Math.round(ok/r.length*100))+'%':'—',N(ok)+'/'+N(r.length))+statTile(L('সময়','Time'),fmtSec(sec),'')+'</div></section>';
+  if(miss.length)h+='<section class="card"><h2>'+L('যেগুলো ভুল হয়েছে','Missed')+'</h2><div class="list">'+miss.map(function(m){var e=BYID[m.id];return '<div class="item" style="cursor:default"><div class="l1"><span class="q">'+esc(e.q)+'</span></div><div class="a">'+esc(e.a)+'</div></div>';}).join('')+'</div><div class="row" style="margin-top:12px"><button class="btn pri" data-a="retryMissed">'+L('ভুলগুলো আবার','Retry missed')+'</button></div></section>';
+  h+='<div class="row"><button class="btn" data-a="go" data-r="home">'+L('হোমে যান','Back home')+'</button><button class="btn" data-a="go" data-r="practice">'+L('আরও প্র্যাকটিস','More practice')+'</button></div></div>';
+  return h;
+}
+function sessionView(){
+  if(S.finished)return summaryHTML();
+  var b=S.mode==='flash'?flashHTML():S.mode==='mcq'?mcqHTML():typeHTML();
+  return '<div class="stage">'+b+'</div>';
+}
+
+/* ---------- render ---------- */
+function render(){
+  document.documentElement.lang=ST.set.lang==='bn'?'bn':'en';applyTheme();
+  document.body.classList.toggle('focus',route==='session'||route==='learn');
+  var v;
+  switch(route){case 'home':v=homeView();break;case 'today':v=todayView();break;case 'practice':v=practiceView();break;case 'search':v=searchView();break;
+    case 'plan':v=planView();break;case 'more':v=moreView();break;case 'report':v=reportView();break;case 'prefs':v=prefsView();break;case 'session':v=sessionView();break;case 'learn':v=learnView();break;case 'extra':v=extraView();break;default:v=homeView();}
+  document.getElementById('app').innerHTML=headerHTML()+'<main class="wrap">'+v+'</main>';
+  var ti=document.getElementById('ti');if(ti)ti.focus();
+  var rc=document.getElementById('rc');if(rc)rc.focus();
+}
+
+/* ---------- actions ---------- */
+var ACT={
+  go:function(el){go(el.dataset.r);},
+  settings:function(){if(route==='prefs'){go(PREV||'home');}else{PREV=(route==='session'?(S&&S.from):route==='learn'?'today':route)||'home';go('prefs');}},
+  lang:function(){ST.set.lang=ST.set.lang==='bn'?'en':'bn';save();render();},
+  theme:function(){ST.set.theme=effTheme()==='dark'?'light':'dark';save();render();},
+  fmt:function(el){UI.fmt=el.dataset.v;render();},
+  learn:function(){UI.rev={};UI.learnIds=null;go('learn');},
+  learnBack:function(){go(UI.learnIds?'extra':'today');},
+  lcover:function(){UI.cover=!UI.cover;UI.rev={};var y=window.pageYOffset;render();window.scrollTo(0,y);},
+  lrev:function(el){UI.rev[el.dataset.id]=true;var y=window.pageYOffset;render();window.scrollTo(0,y);},
+  learnLater:function(){if(!UI.learnIds){var ids=todayPlan().newIds;ST.rd={day:dayIdx(),n:ids.length};save();}go('today');},
+  learnDone:function(){var ids=learnIds(),custom=!!UI.learnIds;if(!custom){ST.rd={day:dayIdx(),n:ids.length};save();}startSession(UI.fmt,ids.slice(),{from:custom?'extra':'today',kind:custom?'extra':'learn'});},
+  extra:function(){go('extra');},
+  exAll:function(){UI.ex.cats=[];render();},
+  exCat:function(el){var i=UI.ex.cats.indexOf(el.dataset.v);if(i>=0)UI.ex.cats.splice(i,1);else UI.ex.cats.push(el.dataset.v);render();},
+  exCount:function(el){UI.ex.count=+el.dataset.v;render();},
+  exOrder:function(el){UI.ex.order=el.dataset.v;render();},
+  exGo:function(){var pool=extraPool();if(!pool.length){toast(L('এই ক্যাটাগরিতে আর নতুন শব্দ নেই।','No new words left in this selection.'));return;}
+    if(UI.ex.order==='rand')pool=shuffle(pool.slice());
+    UI.learnIds=pool.slice(0,Math.max(1,UI.ex.count));UI.rev={};go('learn');},
+  startDaily:function(){var q=buildDaily();startSession(UI.fmt,q,{from:'today',kind:'daily'});},
+  catAll:function(){UI.cats=[];render();},
+  cat:function(el){var i=UI.cats.indexOf(el.dataset.v);if(i>=0)UI.cats.splice(i,1);else UI.cats.push(el.dataset.v);render();},
+  scope:function(el){UI.scope=el.dataset.v;render();},
+  count:function(el){UI.count=+el.dataset.v;render();},
+  wfmt:function(el){UI.weakFmt=el.dataset.v;render();},
+  startPractice:function(el){
+    var cats=UI.cats.length?UI.cats:DISPCATS.map(function(c){return c.id;});
+    var ids=ENTRIES.filter(function(e){if(cats.indexOf(P(e.cat))<0)return false;var st=status(e.id),c=ST.cards[e.id],today=dayIdx();
+      if(UI.scope==='due')return c&&c.n&&c.due<=today;if(UI.scope==='new')return st==='new';if(UI.scope==='seen')return st!=='new';return true;}).map(function(e){return e.id;});
+    var q=interleave(ids).slice(0,UI.count);
+    startSession(el.dataset.v,q,{from:'practice'});
+  },
+  weak:function(ev){
+    var ids=ENTRIES.filter(function(e){return isWeak(e.id);}).map(function(e){return e.id;});
+    ids.sort(function(a,b){var x=ST.cards[a],y=ST.cards[b];return (x.b||1)-(y.b||1);});
+    if(!ids.length){toast(L('দুর্বল শব্দ এখনো নেই।','No weak words yet.'));return;}
+    startSession(UI.weakFmt,interleave(ids.slice(0,Math.max(UI.count,30))).slice(0,Math.max(UI.count,30)),{from:'practice',kind:'weak'});
+  },
+  quit:function(){var f=S&&S.from||'practice';S=null;go(f);},
+  reveal:function(){var rc=document.getElementById('rc');S.cur.recall=rc?rc.value:'';S.cur.phase='a';render();},
+  rate:function(el){rate(+el.dataset.q);},
+  pick:function(el){var c=S.cur;if(c.pick!==null)return;c.pick=+el.dataset.i;var ok=c.mc.opts[c.pick].ok,ms=Date.now()-c.start;recordFirst(ok?(ms<3500?5:4):1);render();},
+  next:function(){advance();},
+  submit:function(){var c=S.cur,ti=document.getElementById('ti'),txt=ti?ti.value:'';if(!norm(txt)){toast(L('আগে কিছু লিখুন।','Type an answer first.'));return;}
+    if(c.long){c.tres={r:'self',text:txt};c.phase='a';render();return;}
+    var r=checkTyped(c.e,c.v,txt);r.text=txt;if(r.r==='near')r.text=txt;c.tres=r;recordFirst(r.r==='ok'?((Date.now()-c.start)<6000?5:4):r.r==='near'?3:1);render();},
+  skip:function(){var c=S.cur;if(c.long){c.tres={r:'self',text:''};c.phase='a';render();return;}c.tres={r:'bad',text:''};recordFirst(1);render();},
+  retryMissed:function(){var ids=S.results.filter(function(x){return x.q<3;}).map(function(x){return x.id;});var m=S.mode,f=S.from;S.done=new Set();startSession(m==='match'?'flash':m,ids,{from:f});},
+  star:function(el,ev){ev.stopPropagation();var on=toggleStar(el.dataset.id);if(route==='session'||route==='search'||route==='learn'){var y=window.pageYOffset;render();window.scrollTo(0,y);}},
+  open:function(el){BR.open=BR.open===el.dataset.id?null:el.dataset.id;var r=document.getElementById('bres');if(r)r.innerHTML=browseListHTML();},
+  none:function(){},
+  more50:function(){BR.limit+=50;document.getElementById('bres').innerHTML=browseListHTML();},
+  letter:function(el){BR.letter=el.dataset.v;BR.limit=50;render();},
+  plall:function(){PL.all=!PL.all;render();},
+  export:function(){IMP.text=JSON.stringify(ST);render();},
+  copyBackup:function(){var t=document.getElementById('bk');var txt=t?t.value:'';if(!txt){toast(L('আগে ব্যাকআপ তৈরি করুন।','Create the backup first.'));return;}
+    try{navigator.clipboard.writeText(txt).then(function(){toast(L('কপি হয়েছে','Copied'));},function(){t.select();toast(L('লেখাটি বেছে নেওয়া হয়েছে, কপি করুন','Selected, press copy'));});}catch(e){t.select();}},
+  import:function(){var t=document.getElementById('bk');try{var o=JSON.parse(t.value);if(!o||typeof o!=='object'||!o.cards)throw 0;var d=defaults();ST=Object.assign({},d,o);ST.set=Object.assign({},d.set,o.set||{});ST.tm=Object.assign({},d.tm,o.tm||{});ORDER_CACHE.k='';save();IMP.text='';toast(L('রিস্টোর হয়েছে','Restored'));render();}catch(e){toast(L('এটা ঠিক ব্যাকআপ লেখা নয়।','That text is not a valid backup.'));}},
+  resetAsk:function(){IMP.confirm=true;render();},resetNo:function(){IMP.confirm=false;render();},
+  resetYes:function(){var lang=ST.set.lang,th=ST.set.theme;ST=defaults();ST.set.lang=lang;ST.set.theme=th;ORDER_CACHE.k='';IMP.confirm=false;save();toast(L('মুছে ফেলা হয়েছে','Progress erased'));render();}
+};
+document.addEventListener('click',function(ev){var el=ev.target.closest('[data-a]');if(!el)return;if(el.dataset.a==='none')return;var f=ACT[el.dataset.a];if(f){if(el.tagName==='A')ev.preventDefault();f(el,ev);}});
+document.addEventListener('input',function(ev){var t=ev.target;
+  if(t.id==='bq'){BR.q=t.value;BR.limit=50;document.getElementById('bres').innerHTML=browseListHTML();}
+  if(t.id==='rc'&&S&&S.cur)S.cur.recall=t.value;
+  if(t.id==='excount'){var v=Math.round(+t.value);UI.ex.count=clamp(isFinite(v)&&v>0?v:1,1,500);var ei=document.getElementById('exinfo');if(ei)ei.textContent=exInfo();document.querySelectorAll('[data-a=exCount]').forEach(function(b){b.classList.toggle('on',+b.dataset.v===UI.ex.count);});}
+  if(t.id==='bk')IMP.text=t.value;});
+document.addEventListener('change',function(ev){var t=ev.target;
+  if(t.id==='bcat'){BR.cat=t.value;BR.letter='';BR.limit=50;render();return;}
+  if(t.id==='bl'){BR.letter=t.value;BR.limit=50;render();return;}
+  if(t.id==='bst'){BR.st=t.value;BR.limit=50;render();return;}
+  if(t.dataset&&t.dataset.set){var k=t.dataset.set,v=t.type==='checkbox'?t.checked:t.value;
+    if(k==='hours'||k==='maxReviews')v=+v;if(k==='newPerDay'&&v!=='auto')v=+v;
+    ST.set[k]=v;if(k==='order')ORDER_CACHE.k='';save();render();}});
+document.addEventListener('keydown',function(ev){
+  if(route!=='session'||!S||S.finished)return;
+  var tg=ev.target&&ev.target.tagName,typing=tg==='TEXTAREA'||tg==='INPUT';
+  if(typing){if(ev.key==='Enter'&&tg==='INPUT'&&S.mode==='type'&&S.cur&&!S.cur.tres){ev.preventDefault();ACT.submit();}return;}
+  var c=S.cur;if(!c)return;
+  if(S.mode==='flash'){if(c.phase==='q'&&(ev.key===' '||ev.key==='Enter')){ev.preventDefault();ACT.reveal();}else if(c.phase==='a'){var m={'1':1,'2':3,'3':4,'4':5}[ev.key];if(m)rate(m);}}
+  else if(S.mode==='mcq'){if(c.pick===null&&/^[1-4]$/.test(ev.key)){ACT.pick({dataset:{i:+ev.key-1}});}else if(c.pick!==null&&ev.key==='Enter'){ev.preventDefault();advance();}}
+  else if(S.mode==='type'){if(c.tres&&c.long){var m2={'1':1,'2':3,'3':4,'4':5}[ev.key];if(m2)rate(m2);}else if(c.tres&&ev.key==='Enter'){ev.preventDefault();advance();}}
+});
+window.addEventListener('hashchange',function(){var r=fromHash();if(r&&r!==route&&route!=='session'){route=r;render();}});
+window.__bcs={ENTRIES:ENTRIES,sched:sched,norm:norm,checkTyped:checkTyped,buildMcq:buildMcq,todayPlan:todayPlan,buildPlan:buildPlan,stats:stats,applyGrade:applyGrade,get ST(){return ST;},go:go,get S(){return S;},ACT:ACT,startSession:startSession,view:view,allowed:allowed};
+route=fromHash()||'home';
+render();
+})();
+</script>

@@ -1,0 +1,279 @@
+{
+ "source_file": "bengali_bcs_vocabulary.md",
+ "source_lines": 2938,
+ "categories": [
+  {
+   "id": "syn",
+   "bn": "সমার্থক শব্দ",
+   "en": "Synonyms",
+   "source_rows": 80,
+   "extracted": 80,
+   "verified": 80,
+   "ok": true
+  },
+  {
+   "id": "syn2",
+   "bn": "সমার্থক সারণি (সমোচ্চারিত)",
+   "en": "Synonym / near-sound table",
+   "source_rows": 128,
+   "extracted": 128,
+   "verified": 128,
+   "ok": true
+  },
+  {
+   "id": "ant",
+   "bn": "বিপরীতার্থক শব্দ",
+   "en": "Antonyms",
+   "source_rows": 366,
+   "extracted": 366,
+   "verified": 366,
+   "ok": true
+  },
+  {
+   "id": "onew",
+   "bn": "এক কথায় প্রকাশ",
+   "en": "One-word substitution",
+   "source_rows": 518,
+   "extracted": 518,
+   "verified": 518,
+   "ok": true
+  },
+  {
+   "id": "sound",
+   "bn": "ডাক ও ধ্বনি",
+   "en": "Calls & sounds",
+   "source_rows": 26,
+   "extracted": 26,
+   "verified": 26,
+   "ok": true
+  },
+  {
+   "id": "idiom",
+   "bn": "বাগ্‌ধারা",
+   "en": "Idioms & phrases",
+   "source_rows": 508,
+   "extracted": 508,
+   "verified": 508,
+   "ok": true
+  },
+  {
+   "id": "idiomgrp",
+   "bn": "সমজাতীয় বাগ্‌ধারা",
+   "en": "Idiom groups by meaning",
+   "source_rows": 23,
+   "extracted": 23,
+   "verified": 23,
+   "ok": true
+  },
+  {
+   "id": "proverb",
+   "bn": "প্রবাদ-প্রবচন",
+   "en": "Proverbs",
+   "source_rows": 146,
+   "extracted": 146,
+   "verified": 146,
+   "ok": true
+  },
+  {
+   "id": "term",
+   "bn": "পারিভাষিক শব্দ",
+   "en": "Terminology (English→Bengali)",
+   "source_rows": 565,
+   "extracted": 565,
+   "verified": 565,
+   "ok": true
+  }
+ ],
+ "total_source": 2360,
+ "total_extracted": 2360,
+ "total_verified": 2360,
+ "parse_problems": [],
+ "failed_ids": [],
+ "flagged": [
+  {
+   "id": "syn-0041",
+   "cat": "syn",
+   "q": "(ধন)",
+   "a": "অর্থ, বিত্ত, বিভব, সম্পদ, নিধি, ঐশ্বর্য",
+   "line": 65,
+   "notes": [
+    "মূল ছবিতে শিরোনাম শব্দটি স্পষ্ট নয়; \"ধন\" অনুমিত"
+   ]
+  },
+  {
+   "id": "ant-0134",
+   "cat": "ant",
+   "q": "কুন্তলা",
+   "a": "স্বামী",
+   "line": 426,
+   "notes": [
+    "মূল বইয়ে যেভাবে আছে"
+   ]
+  },
+  {
+   "id": "ant-0145",
+   "cat": "ant",
+   "q": "খেদ",
+   "a": "আহ্লাদ",
+   "line": 442,
+   "notes": [
+    "মূল ছবিতে “খেত”-এর মতো দেখায়"
+   ]
+  },
+  {
+   "id": "ant-0303",
+   "cat": "ant",
+   "q": "রাম",
+   "a": "পাতি",
+   "line": 635,
+   "notes": [
+    "মূল বইয়ে যেভাবে আছে"
+   ]
+  },
+  {
+   "id": "onew-0099",
+   "cat": "onew",
+   "q": "ক্ষমা করার ইচ্ছা",
+   "a": "চিক্ষমিষা/তিতিক্ষা",
+   "line": 845,
+   "notes": []
+  },
+  {
+   "id": "idiomgrp-0001",
+   "cat": "idiomgrp",
+   "q": "অপদার্থ",
+   "a": "অকাল কুষ্মাণ্ড, আমড়া কাঠের ঢেঁকি, কচুবনের কালাচাঁদ, কায়েতের ঘরের ঢেঁকি, ঠুঁটো জগন্নাথ, ঘন্টা গরুড়, ধর্মের ষাঁড়, ঢেঁকির কুমির, মাকাল ফল, ঘটিরাম",
+   "line": 2054,
+   "notes": []
+  }
+ ],
+ "duplicates": [
+  {
+   "cat": "ant",
+   "q": "অপচয়",
+   "ids": [
+    "ant-0015",
+    "ant-0041"
+   ],
+   "answers": [
+    "উপচয়",
+    "সঞ্চয়"
+   ],
+   "same": false
+  },
+  {
+   "cat": "ant",
+   "q": "সৃষ্টি",
+   "ids": [
+    "ant-0316",
+    "ant-0320"
+   ],
+   "answers": [
+    "বিনাশ/সংহার",
+    "প্রলয়"
+   ],
+   "same": false
+  },
+  {
+   "cat": "ant",
+   "q": "সঞ্চয়",
+   "ids": [
+    "ant-0321",
+    "ant-0350"
+   ],
+   "answers": [
+    "অপচয়",
+    "নয়ছয়"
+   ],
+   "same": false
+  },
+  {
+   "cat": "idiom",
+   "q": "কান কাটা",
+   "ids": [
+    "idiom-0122",
+    "idiom-0131"
+   ],
+   "answers": [
+    "বেহায়া",
+    "নির্লজ্জ"
+   ],
+   "same": false
+  }
+ ],
+ "anomalies": {
+  "latin_in_bengali_sections": [],
+  "zwnj": 0,
+  "zwj": 0,
+  "precomposed_yy": 0,
+  "decomposed_yy": 847,
+  "other_precomposed": {
+   "ড়": 0,
+   "ঢ়": 0
+  },
+  "non_bengali_chars": {
+   ",": 749,
+   "e": 477,
+   "i": 411,
+   "a": 382,
+   "o": 361,
+   "t": 357,
+   "n": 349,
+   "r": 330,
+   "l": 206,
+   "/": 184,
+   "c": 181,
+   "s": 177,
+   "u": 149,
+   "d": 135,
+   "m": 118,
+   "g": 107,
+   "p": 97,
+   "y": 94,
+   "A": 74,
+   "-": 65,
+   "h": 64,
+   "C": 61,
+   "v": 50,
+   "f": 49,
+   "P": 46,
+   "b": 41,
+   "S": 33,
+   "B": 32,
+   "R": 32,
+   "k": 30,
+   "D": 29,
+   "I": 29,
+   "T": 27,
+   "F": 24,
+   "M": 24,
+   "L": 22,
+   "w": 20,
+   "H": 20,
+   "O": 19,
+   "E": 18,
+   "G": 18,
+   "V": 15,
+   "x": 14,
+   "W": 14,
+   "J": 14,
+   "N": 13,
+   "(": 12,
+   ")": 12,
+   "z": 11,
+   "U": 10,
+   "K": 8,
+   "Q": 8,
+   "'": 5,
+   "j": 5,
+   "Y": 5,
+   "Z": 4,
+   "q": 3,
+   "X": 2,
+   ":": 1,
+   "?": 1,
+   "‘": 1,
+   "’": 1
+  }
+ }
+}
