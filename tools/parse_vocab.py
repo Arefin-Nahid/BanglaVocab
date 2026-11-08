@@ -86,7 +86,7 @@ for i, raw in enumerate(lines):
         entries.append(e)
 
 # ---------------------------------------------------------------- source-doubt list (from the md's own appendix)
-DOUBT = [('syn', '(ধন)'), ('ant', 'কুন্তলা'), ('ant', 'রাম'), ('ant', 'খেদ'), ('idiomgrp', 'ঘন্টা গরুড়'), ('onew', 'চিক্ষমিষা')]
+DOUBT = [('ant', 'কুন্তলা'), ('ant', 'রাম'), ('ant', 'খেদ'), ('idiomgrp', 'ঘণ্টা গরুড়'), ('onew', 'চিক্ষমিষা')]
 appendix_ok = all(w in src.split('## পরিশিষ্ট')[1] or w == '(ধন)' for _, w in DOUBT[1:]) 
 for e in entries:
     txt = e['q'] + ' ' + e['a']
