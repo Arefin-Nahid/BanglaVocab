@@ -176,6 +176,12 @@ td.r,th.r{text-align:right}
 .ln .lb{display:grid;gap:3px;min-width:0}
 .ln .q{font:700 18px/1.5 var(--ff-q);overflow-wrap:anywhere}
 .ln .a{font:500 16px/1.65 var(--ff-q);overflow-wrap:anywhere}
+.ln .acts{display:flex;align-items:center;gap:2px}
+.chk{width:32px;height:32px;min-height:32px;border-radius:50%;border:2px solid var(--line);background:transparent;color:var(--pri-ink);font:700 16px/1 var(--ff-ui);padding:0;display:grid;place-items:center}
+.chk.on{background:var(--pri);border-color:var(--pri-line)}
+.ln.rd .q{color:var(--muted)}
+.rdbar{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;margin:2px 2px 8px;color:var(--muted)}
+.rdbar b{color:var(--ink)}
 .ln .hide{justify-self:start;background:var(--surface2);color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:6px 12px;font-size:14px;min-height:36px}
 .dock{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;box-shadow:var(--shadow);z-index:20}
 .dock .btn{flex:1 1 140px}
@@ -381,7 +387,7 @@ function todayPlan(){
   return {p:p,dueIds:due,dueCnt:dueCnt,quota:quota,done:done,newIds:newIds,unseen:un.length,
           estSec:dueCnt*p.tRev+newIds.length*p.tNew};
 }
-var REV_OFF=[1,4,11,25,55];
+var REV_OFF=[3,10,24,54];
 function buildPlan(){
   var tp=todayPlan(),p=tp.p,un=unseenIds(),today=dayIdx();
   var perDay=ST.set.newPerDay==='auto'?p.auto:+ST.set.newPerDay;
@@ -453,7 +459,7 @@ function buildDaily(){
 /* ---------- routing / UI state ---------- */
 var ROUTES=['home','today','practice','search','plan','more','report','prefs','extra'];
 var route='home',S=null,PREV='home';
-var UI={fmt:'flash',cats:[],scope:'any',count:20,weakFmt:'flash',cover:false,rev:{},learnIds:null,ex:{cats:[],count:20,order:'seq'}};
+var UI={fmt:'flash',cats:[],scope:'any',count:20,weakFmt:'flash',cover:false,rev:{},learnIds:null,learnSrc:'today',marks:{},ex:{cats:[],count:20,order:'seq'}};
 var BR={q:'',cat:'all',letter:'',st:'all',limit:50,open:null};
 var PL={all:false};
 var IMP={confirm:false,lo:false};
@@ -662,7 +668,7 @@ window.addEventListener('pagehide',flushAll);
 function headerHTML(){
   var items=[['home',L('হোম','Home'),''],['today',L('আজ','Today'),''],['practice',L('প্র্যাকটিস','Practice'),''],['search',L('খুঁজুন','Search'),''],['plan',L('প্ল্যান','Plan'),'']];
   var gear='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>';
-  var cur=route==='session'?(S&&S.from)||'practice':((route==='learn'||route==='extra')?'today':route);
+  var cur=route==='session'?(S&&S.from)||'practice':(route==='learn'?(UI.learnSrc==='practice'?'practice':'today'):route==='extra'?'today':route);
   var nav=items.map(function(i){return '<button class="'+i[2]+'" data-a="go" data-r="'+i[0]+'"'+(cur===i[0]?' aria-current="page"':'')+'>'+i[1]+'</button>';}).join('');
   var moon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>';
   var sun='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>';
@@ -707,14 +713,14 @@ function homeView(){
 function todayView(){
   var tp=todayPlan(),nb=tp.dueCnt+tp.newIds.length,backlog=tp.dueIds.length-tp.dueCnt,nn=tp.newIds.length;
   var mins=Math.max(nb?1:0,Math.round(tp.estSec/60));
-  var readDone=!!(ST.rd&&ST.rd.day===dayIdx()&&nn>0&&ST.rd.n>=nn);
+  var readDone=nn>0&&tp.newIds.every(isMarked);
   function cell(k,v,sub){return '<div class="ts"><div class="v">'+v+'</div><div class="k">'+k+'</div><div class="s">'+(sub||'&nbsp;')+'</div></div>';}
   var h='<h1>'+L('আজকের রিভিউ','Daily revision')+'</h1><section class="card lift today"><div class="tstats">'+
     cell(L('রিভিউ বাকি','Reviews due'),N(tp.dueCnt),backlog>0?'+'+N(backlog)+L(' পরে',' later'):'')+
     cell(L('নতুন শব্দ','New words'),N(nn),L('টার্গেট ','Target ')+N(tp.quota))+
     cell(L('সময় (মিনিট)','Minutes'),nb?'~'+N(mins):'—',L('আন্দাজ','estimate'))+'</div>'+
     '<div class="step"><span class="sn">'+L('১','1')+'</span><div class="sb"><b>'+L('নতুন শব্দ পড়ুন','Read the new words')+'</b><span class="small muted">'+
-      (nn?N(nn)+L('টা শব্দ একসাথে','  words in one list')+(readDone?' · <span class="ok">'+L('✓ পড়া হয়েছে','✓ read')+'</span>':''):L('আজকের নতুন শব্দ শেষ','No new words left today'))+'</span></div>'+
+      (nn?N(nn)+L('টা শব্দ একসাথে','  words in one list')+(readDone?' · <span class="ok">'+L('✓ পড়া হয়েছে','✓ read')+'</span>':(function(){var k=todayPlan().newIds.filter(isMarked).length;return k?' · <span class="ok">'+N(k)+L('টা পড়া হয়েছে',' read')+'</span>':'';})()):L('আজকের নতুন শব্দ শেষ','No new words left today'))+'</span></div>'+
       '<button class="btn sm'+(readDone?'':' pri')+'" data-a="learn"'+(nn?'':' disabled')+'>'+(readDone?L('আবার পড়ুন','Read again'):L('পড়তে শুরু করুন','Start reading'))+'</button>'+
       '<div class="more"><button class="link" data-a="extra">'+L('নিজের মতো আরও শব্দ বাছুন','Pick more words')+' ›</button></div></div>'+
     '<div class="step"><span class="sn">'+L('২','2')+'</span><div class="sb"><b>'+L('রিভিউ ও টেস্ট','Review and test')+'</b></div>'+
@@ -722,25 +728,41 @@ function todayView(){
       '<div class="more"><div class="chips">'+
       [['flash',L('ফ্ল্যাশকার্ড','Flashcards')],['mcq','MCQ'],['type',L('লিখে উত্তর','Type answer')]].map(function(m){return '<button class="chip'+(UI.fmt===m[0]?' on':'')+'" data-a="fmt" data-v="'+m[0]+'">'+m[1]+'</button>';}).join('')+'</div></div></div></section>'+
     '<section class="card flat note"><ul><li>'+L('আগে নতুন শব্দগুলো পড়ে নিন, তারপর টেস্ট দিন।','Read the new words first, then take the test.')+'</li>'+
-    '<li>'+L('রিভিউ আসে ১, ৩, ৭, ১৪, ৩০ দিন পরে।','Reviews come back after 1, 3, 7, 14 and 30 days.')+'</li>'+
+    '<li>'+L('রিভিউ আসে ৩, ৭, ১৪, ৩০ দিন পরে।','Reviews come back after 3, 7, 14 and 30 days.')+'</li>'+
     '<li>'+L('রিভিউ জমে গেলে নতুন শব্দ নিজে থেকেই কমে।','If reviews pile up, new words are cut back automatically.')+'</li></ul></section>';
   return h;
 }
 function learnIds(){return UI.learnIds||todayPlan().newIds;}
+function rdIds(){return (ST.rd&&ST.rd.day===dayIdx()&&ST.rd.ids)||[];}
+function isMarked(id){
+  if(UI.learnIds)return !!(UI.marks&&UI.marks[id]);
+  if(ST.rd&&ST.rd.day===dayIdx()&&!ST.rd.ids&&ST.rd.n>=todayPlan().newIds.length&&ST.rd.n>0)return true;
+  return rdIds().indexOf(id)>=0;
+}
+function setMarks(ids,on){
+  if(UI.learnIds){UI.marks=UI.marks||{};ids.forEach(function(id){if(on)UI.marks[id]=1;else delete UI.marks[id];});return;}
+  var cur=new Set(todayPlan().newIds.filter(isMarked));
+  ids.forEach(function(id){if(on)cur.add(id);else cur.delete(id);});
+  var arr=Array.from(cur);ST.rd={day:dayIdx(),n:arr.length,ids:arr};stateDirty();
+}
+function learnBackRoute(){return UI.learnSrc==='practice'?'practice':UI.learnIds?'extra':'today';}
 function learnView(){
   var ids=learnIds(),custom=!!UI.learnIds;
   if(!ids.length)return '<div class="stage"><div class="sess-top"><button class="ib" data-a="learnBack" aria-label="'+L('পিছনে','Back')+'">'+ICON_BACK+'</button></div><div class="card empty">'+L('আজকের নতুন শব্দ শেষ।','No new words left for today.')+'</div></div>';
-  var h='<div class="stage learn"><div class="sess-top"><button class="ib" data-a="learnBack" aria-label="'+L('পিছনে','Back')+'">'+ICON_BACK+'</button><h1 style="font-size:19px;flex:1">'+(custom?L('বাছাই করা শব্দ','Your picks'):L('নতুন শব্দ','New words'))+' · '+N(ids.length)+L('টা',' ')+'</h1></div>'+
+  var h='<div class="stage learn"><div class="sess-top"><button class="ib" data-a="learnBack" aria-label="'+L('পিছনে','Back')+'">'+ICON_BACK+'</button><h1 style="font-size:19px;flex:1">'+(UI.learnSrc==='practice'?L('পড়ার লিস্ট','Reading list'):custom?L('বাছাই করা শব্দ','Your picks'):L('নতুন শব্দ','New words'))+' · '+N(ids.length)+L('টা',' ')+'</h1></div>'+
+   '<div class="rdbar"><span class="num"><b>'+N(ids.filter(isMarked).length)+'</b>/'+N(ids.length)+L(' পড়া হয়েছে',' read')+'</span><button class="link" data-a="markAll">'+(ids.every(isMarked)?L('সব মার্ক সরান','Clear all'):L('সব মার্ক করুন','Mark all'))+'</button></div>'+
    '<label class="switch small muted"><input type="checkbox" id="lcover" data-a="lcover"'+(UI.cover?' checked':'')+'><span>'+L('উত্তর ঢেকে রাখুন (নিজেকে যাচাই করতে)','Cover answers (to test yourself)')+'</span></label>'+
    '<section class="card flat" style="padding:4px 14px 8px"><ol class="lnl">';
   ids.forEach(function(id,i){
-    var e=BYID[id],a=e.items?e.items.join(', '):e.a,c=ST.cards[id],star=c&&c.star,hid=UI.cover&&!UI.rev[id];
-    h+='<li class="ln"><span class="no">'+N(i+1)+'</span><div class="lb"><div class="q">'+esc(e.q)+'</div>'+
+    var e=BYID[id],a=e.items?e.items.join(', '):e.a,c=ST.cards[id],star=c&&c.star,hid=UI.cover&&!UI.rev[id],mk=isMarked(id);
+    h+='<li class="ln'+(mk?' rd':'')+'"><span class="no">'+N(i+1)+'</span><div class="lb"><div class="q">'+esc(e.q)+'</div>'+
       (hid?'<button class="hide" data-a="lrev" data-id="'+id+'">'+L('ট্যাপ করে উত্তর দেখুন','Tap to show the answer')+'</button>':'<div class="a">'+esc(a)+'</div>')+
       '<div class="meta"><span class="tag cat">'+esc(cn(e.cat))+'</span>'+(e.unc?'<span class="tag unc">'+L('সন্দেহ আছে','Unclear in source')+'</span>':'')+'</div></div>'+
-      '<button class="star'+(star?' on':'')+'" data-a="star" data-id="'+id+'" aria-label="'+L('তারকা','Star')+'" aria-pressed="'+(star?'true':'false')+'">'+(star?'★':'☆')+'</button></li>';
+      '<div class="acts"><button class="chk'+(mk?' on':'')+'" data-a="mark" data-id="'+id+'" aria-label="'+L('পড়া হয়েছে','Mark as read')+'" aria-pressed="'+(mk?'true':'false')+'">'+(mk?'✓':'')+'</button>'+
+      '<button class="star'+(star?' on':'')+'" data-a="star" data-id="'+id+'" aria-label="'+L('তারকা','Star')+'" aria-pressed="'+(star?'true':'false')+'">'+(star?'★':'☆')+'</button></div></li>';
   });
-  h+='</ol></section><div class="dock"><button class="btn" data-a="learnLater">'+L('পরে টেস্ট দেব','Test later')+'</button><button class="btn pri" data-a="learnDone">'+L('পড়া শেষ, টেস্ট দিন','Done, start test')+'</button></div></div>';
+  var nm=ids.filter(isMarked).length;
+  h+='</ol></section><div class="dock"><button class="btn" data-a="learnLater">'+(UI.learnSrc==='practice'?L('পরে করব','Later'):L('পরে টেস্ট দেব','Test later'))+'</button><button class="btn pri" data-a="learnDone">'+L('টেস্ট দিন','Start test')+(nm&&nm<ids.length?' ('+N(nm)+')':'')+'</button></div></div>';
   return h;
 }
 function extraPool(){
@@ -773,7 +795,7 @@ function practiceView(){
     [['any',L('যেকোনো','Any')],['due',L('রিভিউ বাকি','Due')],['new',L('নতুন','New')],['seen',L('দেখা','Seen')]].map(function(m){return '<button class="chip'+(UI.scope===m[0]?' on':'')+'" data-a="scope" data-v="'+m[0]+'">'+m[1]+'</button>';}).join('')+'</div></div>'+
     '<div class="fieldset"><label class="f">'+L('কয়টা','How many')+'</label><div class="chips">'+[10,20,30,50].map(function(n){return '<button class="chip'+(UI.count===n?' on':'')+'" data-a="count" data-v="'+n+'">'+N(n)+'</button>';}).join('')+'</div></div></div></div>'+
     '<p class="muted small" style="margin-top:12px">'+L('রিভিউয়ের সময় হওয়ার আগে ঠিক উত্তর দিলে শিডিউল বদলায় না; ভুল হলে শব্দটি আবার রিভিউতে আসে।','A correct answer before a card is due leaves its schedule alone; a miss always brings it back.')+'</p></section>';
-  h+='<section class="grid g4">'+
+  h+='<section class="grid g4"><div class="card mode"><h3>'+L('লিস্ট আকারে পড়ুন','Read as a list')+'</h3><p>'+L('বাছাই করা শব্দগুলো একসাথে সিরিয়ালে পড়ুন, পড়া হলে মার্ক করুন।','Read the selected words in one list and tick each one as you go.')+'</p><button class="btn pri sm" data-a="readList">'+L('পড়তে শুরু করুন','Start reading')+'</button></div>'+
    [['flash',L('ফ্ল্যাশকার্ড','Flashcards'),L('আগে নিজে মনে করুন, তারপর উত্তর দেখে নিজেই রেট দিন।','Recall first, reveal, then rate yourself.')],
     ['mcq','MCQ',L('চারটি অপশন থেকে সঠিকটি বেছে নিন।','Pick the right answer from four options.')],
     ['type',L('লিখে উত্তর','Type the answer'),L('নিজে লিখুন; বানান ভুল হলে ধরা পড়বে।','Type it yourself; near-miss spellings are caught.')]].map(function(m){
@@ -845,7 +867,7 @@ function planView(){
     var ex=Math.floor(Date.parse(ST.set.exam+'T00:00:00Z')/86400000),left=ex-today,dl=left-REV_OFF[REV_OFF.length-1];
     var need=dl>0?Math.ceil(pl.unseen/dl):null;
     h+='<section class="card"><h2>'+L('পরীক্ষার আগে সময় হবে কি না','Exam check')+'</h2><p>'+(left<=0?L('পরীক্ষার তারিখ পেরিয়ে গেছে বা আজই।','The exam date is today or past.'):
-      L('পরীক্ষা ','Exam in ')+N(left)+L(' দিন পরে। ৫৫ দিনের রিভিউ চক্র শেষ করতে শেষ নতুন শব্দ ',' days. To finish the full review ladder, the last new word must start by ')+dateShort(ex-REV_OFF[REV_OFF.length-1])+'.')+'</p>'+
+      L('পরীক্ষা ','Exam in ')+N(left)+L(' দিন পরে। ৫৪ দিনের রিভিউ চক্র শেষ করতে শেষ নতুন শব্দ ',' days. To finish the full review ladder, the last new word must start by ')+dateShort(ex-REV_OFF[REV_OFF.length-1])+'.')+'</p>'+
       (need!=null?'<p class="'+(need<=pl.perDay?'ok':'badc')+'" style="margin-top:8px">'+L('রোজ ',' Needed: ')+N(need)+L(' টি নতুন শব্দ দরকার (প্রায় ',' new words a day (about ')+fmtSec(need*per)+L(' প্রতিদিন)।',' a day). ')+(need<=pl.perDay?L('আপনার বর্তমান গতিতে সম্ভব।','That fits your current pace.'):L('বর্তমান গতির চেয়ে বেশি, সময় বাড়াতে হবে।','That is more than your current pace; add study time.'))+'</p>':
        (left>0?'<p class="badc" style="margin-top:8px">'+L('সময় অপর্যাপ্ত: সম্পূর্ণ রিভিউ চক্রের জন্য যথেষ্ট দিন নেই। পুরো ফাইল শেষ করা যাবে না, তাই কম গুরুত্বপূর্ণ বিভাগ বাদ দিন।','Not enough days left for the full ladder.')+'</p>':''))+'</section>';
   }
@@ -855,7 +877,7 @@ function planView(){
   else h+='<div class="scroll"><table><thead><tr><th>'+L('দিন','Day')+'</th><th>'+L('তারিখ','Date')+'</th><th class="r">'+L('নতুন','New')+'</th><th class="r">'+L('রিভিউ (আন্দাজ)','Reviews (est.)')+'</th><th class="r">'+L('সময়','Time')+'</th><th>'+L('ক্যাটাগরি','Categories')+'</th></tr></thead><tbody>'+
     rows.map(function(r){return '<tr'+(r.k===0?' style="background:var(--accent-soft)"':'')+'><td class="num">'+N(r.k+1)+'</td><td>'+dateShort(r.day)+(r.k===0?' ('+L('আজ','today')+')':'')+'</td><td class="r num">'+N(r.n)+'</td><td class="r num">'+N(r.rev)+'</td><td class="r num">'+fmtSec(r.sec)+'</td><td class="small">'+Object.keys(r.comp).map(function(c){return esc(cn(c))+' ×'+N(r.comp[c]);}).join(', ')+'</td></tr>';}).join('')+'</tbody></table></div>'+
     (pl.rows.length>14?'<div class="row" style="justify-content:center;margin-top:12px"><button class="btn sm" data-a="plall">'+(PL.all?L('কম দেখান','Show fewer'):L('সব ',  'Show all ')+N(pl.rows.length)+L(' দিন দেখান',' days'))+'</button></div>':'');
-  h+='<p class="muted small" style="margin-top:10px">'+L('রিভিউ সংখ্যা ধরে নেওয়া হয়েছে যে প্রতিটি শব্দ ১, ৪, ১১, ২৫ ও ৫৫তম দিনে (১, ৩, ৭, ১৪, ৩০ দিনের ব্যবধানে) রিভিউ হবে। ভুল উত্তর দিলে বাস্তবে কিছু বেশি হবে।','Reviews assume each word returns on days 1, 4, 11, 25 and 55 after it is introduced (1, 3, 7, 14, 30 day gaps). Misses add a few more in practice.')+'</p></section>';
+  h+='<p class="muted small" style="margin-top:10px">'+L('রিভিউ সংখ্যা ধরে নেওয়া হয়েছে যে প্রতিটি শব্দ ৩, ১০, ২৪ ও ৫৪তম দিনে (৩, ৭, ১৪, ৩০ দিনের ব্যবধানে) রিভিউ হবে। ভুল উত্তর দিলে বাস্তবে কিছু বেশি হবে।','Reviews assume each word returns on days 3, 10, 24 and 54 after it is introduced (3, 7, 14, 30 day gaps). Misses add a few more in practice.')+'</p></section>';
   return h;
 }
 function moreView(){
@@ -1037,16 +1059,20 @@ function render(){
 /* ---------- actions ---------- */
 var ACT={
   go:function(el){go(el.dataset.r);},
-  settings:function(){if(route==='prefs'){go(PREV||'home');}else{PREV=(route==='session'?(S&&S.from):route==='learn'?'today':route)||'home';go('prefs');}},
+  settings:function(){if(route==='prefs'){go(PREV||'home');}else{PREV=(route==='session'?(S&&S.from):route==='learn'?(UI.learnSrc==='practice'?'practice':'today'):route)||'home';go('prefs');}},
   lang:function(){ST.set.lang=ST.set.lang==='bn'?'en':'bn';save();render();},
   theme:function(){ST.set.theme=effTheme()==='dark'?'light':'dark';save();render();},
   fmt:function(el){UI.fmt=el.dataset.v;render();},
-  learn:function(){UI.rev={};UI.learnIds=null;go('learn');},
-  learnBack:function(){go(UI.learnIds?'extra':'today');},
+  learn:function(){UI.rev={};UI.learnIds=null;UI.learnSrc='today';go('learn');},
+  learnBack:function(){go(learnBackRoute());},
+  mark:function(el){setMarks([el.dataset.id],!isMarked(el.dataset.id));var y=window.pageYOffset;render();window.scrollTo(0,y);},
+  markAll:function(){var ids=learnIds();setMarks(ids,!ids.every(isMarked));var y=window.pageYOffset;render();window.scrollTo(0,y);},
   lcover:function(){UI.cover=!UI.cover;UI.rev={};var y=window.pageYOffset;render();window.scrollTo(0,y);},
   lrev:function(el){UI.rev[el.dataset.id]=true;var y=window.pageYOffset;render();window.scrollTo(0,y);},
-  learnLater:function(){if(!UI.learnIds){var ids=todayPlan().newIds;ST.rd={day:dayIdx(),n:ids.length};stateDirty();}go('today');},
-  learnDone:function(){var ids=learnIds(),custom=!!UI.learnIds;if(!custom){ST.rd={day:dayIdx(),n:ids.length};stateDirty();}startSession(UI.fmt,ids.slice(),{from:custom?'extra':'today',kind:custom?'extra':'learn'});},
+  learnLater:function(){var ids=learnIds();if(!UI.learnIds&&!ids.some(isMarked))setMarks(ids,true);go(learnBackRoute());},
+  learnDone:function(){var ids=learnIds(),custom=!!UI.learnIds,m=ids.filter(isMarked);
+    if(!m.length){setMarks(ids,true);m=ids.slice();}
+    startSession(UI.fmt,m.slice(),{from:learnBackRoute(),kind:custom?'extra':'learn'});},
   extra:function(){go('extra');},
   exAll:function(){UI.ex.cats=[];render();},
   exCat:function(el){var i=UI.ex.cats.indexOf(el.dataset.v);if(i>=0)UI.ex.cats.splice(i,1);else UI.ex.cats.push(el.dataset.v);render();},
@@ -1054,13 +1080,20 @@ var ACT={
   exOrder:function(el){UI.ex.order=el.dataset.v;render();},
   exGo:function(){var pool=extraPool();if(!pool.length){toast(L('এই ক্যাটাগরিতে আর নতুন শব্দ নেই।','No new words left in this selection.'));return;}
     if(UI.ex.order==='rand')pool=shuffle(pool.slice());
-    UI.learnIds=pool.slice(0,Math.max(1,UI.ex.count));UI.rev={};go('learn');},
+    UI.learnIds=pool.slice(0,Math.max(1,UI.ex.count));UI.rev={};UI.marks={};UI.learnSrc='extra';go('learn');},
   startDaily:function(){var q=buildDaily();startSession(UI.fmt,q,{from:'today',kind:'daily'});},
   catAll:function(){UI.cats=[];render();},
   cat:function(el){var i=UI.cats.indexOf(el.dataset.v);if(i>=0)UI.cats.splice(i,1);else UI.cats.push(el.dataset.v);render();},
   scope:function(el){UI.scope=el.dataset.v;render();},
   count:function(el){UI.count=+el.dataset.v;render();},
   wfmt:function(el){UI.weakFmt=el.dataset.v;render();},
+  readList:function(){
+    var cats=UI.cats.length?UI.cats:DISPCATS.map(function(c){return c.id;});
+    var ids=ENTRIES.filter(function(e){if(cats.indexOf(P(e.cat))<0)return false;var st=status(e.id),c=ST.cards[e.id],today=dayIdx();
+      if(UI.scope==='due')return c&&c.n&&c.due<=today;if(UI.scope==='new')return st==='new';if(UI.scope==='seen')return st!=='new';return true;}).map(function(e){return e.id;});
+    if(!ids.length){toast(L('এই বাছাইয়ে কোনো শব্দ নেই।','No words in this selection.'));return;}
+    UI.learnIds=interleave(ids).slice(0,UI.count);UI.rev={};UI.marks={};UI.learnSrc='practice';go('learn');
+  },
   startPractice:function(el){
     var cats=UI.cats.length?UI.cats:DISPCATS.map(function(c){return c.id;});
     var ids=ENTRIES.filter(function(e){if(cats.indexOf(P(e.cat))<0)return false;var st=status(e.id),c=ST.cards[e.id],today=dayIdx();
