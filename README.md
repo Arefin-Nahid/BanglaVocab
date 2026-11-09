@@ -58,7 +58,7 @@ This confirms a match with the Markdown, not with the printed book.
 - **Scheduling:** SM-2 ease factor with a 3, 7, 14, 30 day ladder (Forgot = shown again, Hard = 3 days, Got it = 7 then 14), plus Leitner boxes.
 - **Modes:** flashcards (with optional typed recall), MCQ, type-the-answer, weak-word practice.
 - **Cloud sync:** Google sign-in, newest change per card wins, works offline and syncs later.
-- **Planner:** daily new-word target from your study hours and measured speed; optional exam date check.
+- **Daily plan:** new words per day come only from the "new words per day" setting; new words pause while 60 or more reviews are waiting.
 
 ## Publish on GitHub Pages
 

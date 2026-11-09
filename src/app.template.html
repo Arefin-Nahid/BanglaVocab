@@ -35,7 +35,8 @@ header.top .in{display:flex;align-items:center;gap:16px;min-height:56px;flex-wra
 .logo{width:34px;height:34px;flex:none}.logo .bg{fill:var(--pri)}.logo .lgl{fill:none;stroke:var(--pri-ink);stroke-width:1.9;stroke-linejoin:round;stroke-linecap:round}
 .brand small{display:block;font:500 11px/1.2 var(--ff-ui);color:var(--muted);letter-spacing:.04em}
 nav.tabs{display:flex;gap:2px;order:2}
-nav.tabs button{background:none;border:0;padding:8px 12px;border-radius:8px;color:var(--muted);font-weight:500;white-space:nowrap}
+nav.tabs button{background:none;border:0;padding:8px 12px;border-radius:8px;color:var(--muted);font-weight:500;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+nav.tabs button svg{width:19px;height:19px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav.tabs button[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
 nav.tabs button:hover{color:var(--ink)}
 .m-only{display:none}
@@ -135,7 +136,7 @@ td.r,th.r{text-align:right}
 .c-learned{background:var(--accent)}.c-seen{background:var(--pri)}
 /* today */
 .today{padding:14px 16px;display:grid;gap:14px}
-.tstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.tstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
 .ts{padding:0 12px;border-left:1px solid var(--line);min-width:0}
 .ts:first-child{border-left:0;padding-left:0}
 .ts .v{font:700 26px/1.25 var(--ff-ui);font-variant-numeric:tabular-nums}
@@ -240,7 +241,8 @@ body.focus header.top nav.tabs{display:none}
 @media (max-width:760px){
   header.top .in{min-height:52px}
   nav.tabs{position:fixed;left:0;right:0;bottom:0;order:0;background:var(--surface);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));justify-content:space-around;z-index:25}
-  nav.tabs button{flex:1;padding:8px 2px;font-size:13px;text-align:center}
+  nav.tabs button{flex:1;padding:6px 2px 4px;font-size:12px;text-align:center;flex-direction:column;gap:3px;min-width:0}
+  nav.tabs button svg{width:22px;height:22px}
   .d-only{display:none}.m-only{display:block}
   body.focus nav.tabs{display:none}
   main{padding-bottom:100px}
@@ -280,7 +282,7 @@ function lev(a,b){var m=a.length,n=b.length;if(!m)return n;if(!n)return m;var p=
 /* ---------- state ---------- */
 var KEY='bcs-vocab-v1';
 function defaults(){return {v:1,langFix:1,rd:null,owner:null,su:0,cards:{},log:{},tm:{n:{ms:0,c:0},r:{ms:0,c:0}},start:dayIdx(),
-  set:{lang:'bn',theme:'auto',hours:1,newPerDay:'auto',order:'source',interleave:true,recall:false,dir:'forward',maxReviews:120,exam:''}};}
+  set:{lang:'bn',theme:'auto',newPerDay:20,order:'source',interleave:true,recall:false,dir:'forward',maxReviews:120}};}
 function load(){try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r),d=defaults();var s=Object.assign({},d,o);s.set=Object.assign({},d.set,o.set||{});if(!o.langFix){s.set.lang='bn';s.langFix=1;}s.tm=Object.assign({},d.tm,o.tm||{});return s;}}catch(e){}return defaults();}
 var ST=load(), saveT=null;
 function save(){clearTimeout(saveT);saveT=setTimeout(function(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}},150);}
@@ -289,7 +291,6 @@ var BND='০১২৩৪৫৬৭৮৯';
 function N(n){var s=String(n);if(ST.set.lang==='bn')s=s.replace(/\d/g,function(d){return BND[+d];});return s;}
 function cn(id){var c=CATBY[P(id)];return c?L(c.bn,c.en):id;}
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show');},2600);}
-function fmtSec(s){var m=Math.round(s/60);if(s<60)return N(Math.max(1,Math.round(s)))+L(' সেকেন্ড',' sec');if(m<60)return N(m)+L(' মিনিট',' min');return N(Math.floor(m/60))+L(' ঘণ্টা ',' h ')+(m%60?N(m%60)+L(' মিনিট',' min'):'');}
 function fmtDays(d){return N(d)+L(' দিন',' d');}
 function dateStr(d){return new Date(d*86400000).toLocaleDateString(ST.set.lang==='bn'?'bn-BD':'en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});}
 function dateShort(d){return new Date(d*86400000).toLocaleDateString(ST.set.lang==='bn'?'bn-BD':'en-GB',{day:'numeric',month:'short',timeZone:'UTC'});}
@@ -346,16 +347,6 @@ function stLabel(s){return {new:L('নতুন','New'),learning:L('শিখছ
 function toggleStar(id){var c=ST.cards[id];if(!c)c=ST.cards[id]={s:0,ef:2.5,iv:0,l:0,b:1,due:dayIdx(),n:0,c:0,w:0};c.star=!c.star;c.u=Date.now();save();cloudCard(id);return c.star;}
 
 /* ---------- planner ---------- */
-function perf(){
-  var tm=ST.tm,r=0,c=0;for(var k in ST.log){r+=ST.log[k].r;c+=ST.log[k].c;}
-  var tn=tm.n.c>=15?tm.n.ms/tm.n.c/1000:30, tr=tm.r.c>=30?tm.r.ms/tm.r.c/1000:9;
-  var acc=r>=30?c/r:0.8;
-  var p={tNew:clamp(tn,8,120),tRev:clamp(tr,3,40),acc:acc,sample:r,measured:(tm.n.c>=15&&tm.r.c>=30)};
-  p.rpc=5+(1-acc)*10;
-  p.per=p.tNew+p.rpc*p.tRev;
-  p.auto=Math.max(1,Math.floor(ST.set.hours*3600/p.per));
-  return p;
-}
 var ORDER_CACHE={k:'',v:[]};
 function getOrder(){
   if(ORDER_CACHE.k===ST.set.order)return ORDER_CACHE.v;
@@ -372,42 +363,13 @@ function dueIds(){
   for(var id in ST.cards){var c=ST.cards[id];if(c.n&&c.due<=today)out.push(id);}
   out.sort(function(a,b){var x=ST.cards[a],y=ST.cards[b];return x.due-y.due||x.b-y.b;});return out;
 }
+var PAUSE_AT=60;
 function todayPlan(){
-  var p=perf(),today=dayIdx(),due=dueIds(),dueCnt=Math.min(due.length,ST.set.maxReviews);
-  var budget=ST.set.hours*3600,revT=dueCnt*p.tRev;
-  var quota,auto=ST.set.newPerDay==='auto';
-  if(auto){
-    var key=ST.set.hours+'|'+ST.set.maxReviews;
-    if(ST.q&&ST.q.day===today&&ST.q.key===key)quota=ST.q.quota;
-    else{quota=Math.min(p.auto,Math.max(0,Math.floor((budget-revT)/p.tNew)));ST.q={day:today,key:key,quota:quota};stateDirty();}
-  }else quota=+ST.set.newPerDay;
+  var today=dayIdx(),due=dueIds(),dueCnt=Math.min(due.length,ST.set.maxReviews);
+  var quota=+ST.set.newPerDay||20,paused=due.length>=PAUSE_AT;
   var done=(ST.log[today]&&ST.log[today].n)||0;
-  var un=unseenIds(),remain=Math.max(0,Math.min(quota-done,un.length));
-  var newIds=un.slice(0,remain);
-  return {p:p,dueIds:due,dueCnt:dueCnt,quota:quota,done:done,newIds:newIds,unseen:un.length,
-          estSec:dueCnt*p.tRev+newIds.length*p.tNew};
-}
-var REV_OFF=[3,10,24,54];
-function buildPlan(){
-  var tp=todayPlan(),p=tp.p,un=unseenIds(),today=dayIdx();
-  var perDay=ST.set.newPerDay==='auto'?p.auto:+ST.set.newPerDay;
-  var days=[],i=0,k=0;
-  var firstN=Math.max(0,Math.min(tp.quota-tp.done,un.length));
-  while(i<un.length&&k<800){
-    var n=k===0?firstN:perDay;n=Math.min(n,un.length-i);
-    if(n>0||k>0){days.push({k:k,day:today+k,ids:un.slice(i,i+n)});i+=n;}
-    if(k===0&&n===0&&perDay===0)break;k++;
-    if(k>0&&perDay<=0)break;
-  }
-  var fc={};for(var id in ST.cards){var c=ST.cards[id];if(c.n){var d=Math.max(c.due,today)-today;fc[d]=(fc[d]||0)+1;}}
-  var rows=days.map(function(d){
-    var rev=fc[d.k]||0;
-    days.forEach(function(o){if(o.k<d.k&&REV_OFF.indexOf(d.k-o.k)>=0)rev+=o.ids.length;});
-    var comp={};d.ids.forEach(function(id){var c=P(BYID[id].cat);comp[c]=(comp[c]||0)+1;});
-    return {k:d.k,day:d.day,n:d.ids.length,rev:rev,comp:comp,sec:d.ids.length*p.tNew+rev*p.tRev};
-  });
-  var last=days.length?days[days.length-1].k:0;
-  return {rows:rows,perDay:perDay,unseen:un.length,introDone:today+last,ladderDone:today+last+REV_OFF[REV_OFF.length-1],p:p,tp:tp};
+  var un=unseenIds(),remain=paused?0:Math.max(0,Math.min(quota-done,un.length));
+  return {dueIds:due,dueCnt:dueCnt,quota:quota,done:done,paused:paused,newIds:un.slice(0,remain),unseen:un.length};
 }
 
 /* ---------- stats ---------- */
@@ -457,11 +419,10 @@ function buildDaily(){
 }
 
 /* ---------- routing / UI state ---------- */
-var ROUTES=['home','today','practice','search','plan','more','report','prefs','extra'];
+var ROUTES=['home','today','practice','search','more','report','prefs','extra'];
 var route='home',S=null,PREV='home';
 var UI={fmt:'flash',cats:[],scope:'any',count:20,weakFmt:'flash',cover:false,rev:{},learnIds:null,learnSrc:'today',marks:{},ex:{cats:[],count:20,order:'seq'}};
 var BR={q:'',cat:'all',letter:'',st:'all',limit:50,open:null};
-var PL={all:false};
 var IMP={confirm:false,lo:false};
 function go(r){route=r;S=null;try{if(location.hash!=='#'+r)location.hash=r;}catch(e){}window.scrollTo(0,0);render();}
 function fromHash(){try{var h=(location.hash||'').slice(1);if(ROUTES.indexOf(h)>=0)return h;}catch(e){}return null;}
@@ -666,10 +627,11 @@ window.addEventListener('pagehide',flushAll);
 
 /* ---------- views ---------- */
 function headerHTML(){
-  var items=[['home',L('হোম','Home'),''],['today',L('আজ','Today'),''],['practice',L('প্র্যাকটিস','Practice'),''],['search',L('খুঁজুন','Search'),''],['plan',L('প্ল্যান','Plan'),'']];
+  var NI={home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',today:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',practice:'<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20.5 20.5L16 16"/>'};
+  var items=[['home',L('হোম','Home'),''],['today',L('আজ','Today'),''],['practice',L('প্র্যাকটিস','Practice'),''],['search',L('খুঁজুন','Search'),'']];
   var gear='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>';
   var cur=route==='session'?(S&&S.from)||'practice':(route==='learn'?(UI.learnSrc==='practice'?'practice':'today'):route==='extra'?'today':route);
-  var nav=items.map(function(i){return '<button class="'+i[2]+'" data-a="go" data-r="'+i[0]+'"'+(cur===i[0]?' aria-current="page"':'')+'>'+i[1]+'</button>';}).join('');
+  var nav=items.map(function(i){return '<button class="'+i[2]+'" data-a="go" data-r="'+i[0]+'"'+(cur===i[0]?' aria-current="page"':'')+'><svg viewBox="0 0 24 24" aria-hidden="true">'+NI[i[0]]+'</svg><span>'+i[1]+'</span></button>';}).join('');
   var moon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>';
   var sun='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>';
   return '<header class="top"><div class="wrap in"><div class="brand">'+LOGO+'<div class="bt">'+L('বাংলা শব্দভাণ্ডার','Bangla Vocab')+'<small>'+L('BCS প্রিলি প্রস্তুতি','BCS preliminary prep')+'</small></div></div>'+
@@ -693,11 +655,10 @@ function bar2(learned,seen,total){
 function homeView(){
   var s=stats(),tp=todayPlan(),today=dayIdx(),lg=ST.log[today]||{r:0};
   var nn=tp.newIds.length,rem=tp.dueCnt+nn,total=lg.r+rem,pct=total?Math.round(lg.r/total*100):0;
-  var mins=Math.max(rem?1:0,Math.round(tp.estSec/60));
   var wk=ENTRIES.filter(function(e){return isWeak(e.id);}).length;
   var h='<div class="hello"><h1>'+L('আজকের পড়া','Today')+'</h1><span class="muted small">'+dateStr(today)+'</span></div>';
   h+='<section class="card lift hero2"><div class="hhead"><div class="ht"><div class="big">'+(rem?N(rem)+L('টা বাকি','  left'):(lg.r?L('আজকের পড়া শেষ ✓','All done today ✓'):L('আজ কিছু বাকি নেই','Nothing due today')))+'</div>'+
-    '<div class="muted small">'+(rem?N(nn)+L(' নতুন শব্দ · ',' new · ')+N(tp.dueCnt)+L(' রিভিউ · প্রায় ',' reviews · about ')+N(mins)+L(' মিনিট',' min'):L('চাইলে আরও শব্দ পড়তে পারেন।','You can still read more words.'))+'</div></div>'+
+    '<div class="muted small">'+(rem?N(nn)+L(' নতুন শব্দ · ',' new · ')+N(tp.dueCnt)+L(' রিভিউ',' reviews'):L('চাইলে আরও শব্দ পড়তে পারেন।','You can still read more words.'))+'</div></div>'+
     (rem?'<button class="btn pri" data-a="go" data-r="today">'+L('শুরু করুন','Start')+'</button>':'<button class="btn pri" data-a="extra">'+L('আরও শব্দ পড়ুন','Read more words')+'</button>')+'</div>'+
     (total?'<div><div class="prog thick" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><i style="width:'+pct+'%"></i></div><div class="small muted" style="margin-top:6px">'+L('আজ ','Today ')+N(lg.r)+L('টা হয়েছে',' done')+'</div></div>':'')+'</section>';
   h+='<section class="tiles3">'+
@@ -712,13 +673,12 @@ function homeView(){
 }
 function todayView(){
   var tp=todayPlan(),nb=tp.dueCnt+tp.newIds.length,backlog=tp.dueIds.length-tp.dueCnt,nn=tp.newIds.length;
-  var mins=Math.max(nb?1:0,Math.round(tp.estSec/60));
   var readDone=nn>0&&tp.newIds.every(isMarked);
   function cell(k,v,sub){return '<div class="ts"><div class="v">'+v+'</div><div class="k">'+k+'</div><div class="s">'+(sub||'&nbsp;')+'</div></div>';}
   var h='<h1>'+L('আজকের রিভিউ','Daily revision')+'</h1><section class="card lift today"><div class="tstats">'+
     cell(L('রিভিউ বাকি','Reviews due'),N(tp.dueCnt),backlog>0?'+'+N(backlog)+L(' পরে',' later'):'')+
-    cell(L('নতুন শব্দ','New words'),N(nn),L('টার্গেট ','Target ')+N(tp.quota))+
-    cell(L('সময় (মিনিট)','Minutes'),nb?'~'+N(mins):'—',L('আন্দাজ','estimate'))+'</div>'+
+    cell(L('নতুন শব্দ','New words'),N(nn),tp.paused?L('রিভিউ বেশি, আপাতত বন্ধ','Paused for now'):L('টার্গেট ','Target ')+N(tp.quota))+
+    '</div>'+
     '<div class="step"><span class="sn">'+L('১','1')+'</span><div class="sb"><b>'+L('নতুন শব্দ পড়ুন','Read the new words')+'</b><span class="small muted">'+
       (nn?N(nn)+L('টা শব্দ একসাথে','  words in one list')+(readDone?' · <span class="ok">'+L('✓ পড়া হয়েছে','✓ read')+'</span>':(function(){var k=todayPlan().newIds.filter(isMarked).length;return k?' · <span class="ok">'+N(k)+L('টা পড়া হয়েছে',' read')+'</span>':'';})()):L('আজকের নতুন শব্দ শেষ','No new words left today'))+'</span></div>'+
       '<button class="btn sm'+(readDone?'':' pri')+'" data-a="learn"'+(nn?'':' disabled')+'>'+(readDone?L('আবার পড়ুন','Read again'):L('পড়তে শুরু করুন','Start reading'))+'</button>'+
@@ -729,7 +689,7 @@ function todayView(){
       [['flash',L('ফ্ল্যাশকার্ড','Flashcards')],['mcq','MCQ'],['type',L('লিখে উত্তর','Type answer')]].map(function(m){return '<button class="chip'+(UI.fmt===m[0]?' on':'')+'" data-a="fmt" data-v="'+m[0]+'">'+m[1]+'</button>';}).join('')+'</div></div></div></section>'+
     '<section class="card flat note"><ul><li>'+L('আগে নতুন শব্দগুলো পড়ে নিন, তারপর টেস্ট দিন।','Read the new words first, then take the test.')+'</li>'+
     '<li>'+L('রিভিউ আসে ৩, ৭, ১৪, ৩০ দিন পরে।','Reviews come back after 3, 7, 14 and 30 days.')+'</li>'+
-    '<li>'+L('রিভিউ জমে গেলে নতুন শব্দ নিজে থেকেই কমে।','If reviews pile up, new words are cut back automatically.')+'</li></ul></section>';
+    '<li>'+L('রিভিউ ৬০টা বা তার বেশি জমলে নতুন শব্দ আপাতত বন্ধ থাকে, রিভিউ কমলে আবার শুরু হয়।','New words pause while 60 or more reviews are waiting, and resume once you clear some.')+'</li></ul></section>';
   return h;
 }
 function learnIds(){return UI.learnIds||todayPlan().newIds;}
@@ -849,40 +809,9 @@ function searchView(){
    '<select id="bst" aria-label="'+L('অবস্থা','Status')+'">'+[['all',L('অবস্থা','Status')],['new',L('নতুন','New')],['learning',L('শিখছি','Learning')],['review',L('রিভিউ','Review')],['mastered',L('মুখস্থ','Mastered')],['diff',L('কঠিন','Difficult')],['star',L('তারকা','Starred')]].map(function(o){return '<option value="'+o[0]+'"'+(BR.st===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div></section>'+
    '<section class="card" id="bres">'+browseListHTML()+'</section>';
 }
-function planView(){
-  var pl=buildPlan(),p=pl.p,tp=pl.tp,today=dayIdx();
-  var h='<h1>'+L('পড়ার প্ল্যান','Study planner')+'</h1>';
-  h+='<section class="card lift"><div class="grid g3">'+statTile(L('বাকি নতুন শব্দ','New words left'),N(pl.unseen),L('মোট ','of ')+N(ENTRIES.length))+
-    statTile(L('রোজ নতুন শব্দ','New words a day'),N(pl.perDay),ST.set.newPerDay==='auto'?L('স্বয়ংক্রিয়','auto'):L('নিজে ঠিক করা','manual'))+
-    statTile(L('সব শব্দ শুরু করা শেষ হবে','All words started by'),pl.unseen?dateShort(pl.introDone):L('শেষ','Done'),pl.unseen?N(pl.introDone-today+1)+L(' দিন লাগবে',' days'):'')+
-    statTile(L('সব রিভিউ শেষ হবে','Full ladder done by'),pl.unseen?dateShort(pl.ladderDone):'—',L('৩০ দিনের রিভিউসহ','including the 30-day review'))+'</div>'+
-    '<div class="row" style="margin-top:16px;gap:16px"><div class="fieldset"><label class="f" for="ph">'+L('প্রতিদিন পড়ার সময়','Study time per day')+'</label><select id="ph" data-set="hours">'+[0.5,1,1.5,2,3,4].map(function(v){return '<option value="'+v+'"'+(ST.set.hours===v?' selected':'')+'>'+N(v)+L(' ঘণ্টা',' h')+'</option>';}).join('')+'</select></div>'+
-    '<div class="fieldset"><label class="f" for="pe">'+L('পরীক্ষার তারিখ (ঐচ্ছিক)','Exam date (optional)')+'</label><input type="date" id="pe" data-set="exam" value="'+esc(ST.set.exam)+'"></div></div></section>';
-  var per=p.per;
-  h+='<section class="card"><h2>'+L('এই হিসাব কীভাবে হলো','What the estimate is based on')+'</h2><p class="small muted">'+
-    L('নতুন শব্দ প্রতি ','New word: ')+fmtSec(p.tNew)+L(', রিভিউ প্রতি ',', review: ')+fmtSec(p.tRev)+L(', নির্ভুলতা ',', accuracy ')+N(Math.round(p.acc*100))+'%. '+
-    L('প্রতিটি শব্দ গড়ে ','Each word needs about ')+N(p.rpc.toFixed(1))+L(' বার রিভিউ হয়, তাই শব্দপ্রতি মোট ',' reviews, so about ')+fmtSec(per)+L(' লাগে। ',' in total. ')+
-    (p.measured?L('এগুলো আপনার নিজের পড়ার গতি থেকে নেওয়া।','These come from your own sessions.'):L('এখনো যথেষ্ট ডেটা নেই, তাই ধরে নেওয়া মান ব্যবহার হচ্ছে। কয়েকদিন পড়ার পর নিজে থেকেই ঠিক হয়ে যাবে।','Not enough data yet, so default values are used; they adjust after a few sessions.'))+'</p></section>';
-  if(ST.set.exam){
-    var ex=Math.floor(Date.parse(ST.set.exam+'T00:00:00Z')/86400000),left=ex-today,dl=left-REV_OFF[REV_OFF.length-1];
-    var need=dl>0?Math.ceil(pl.unseen/dl):null;
-    h+='<section class="card"><h2>'+L('পরীক্ষার আগে সময় হবে কি না','Exam check')+'</h2><p>'+(left<=0?L('পরীক্ষার তারিখ পেরিয়ে গেছে বা আজই।','The exam date is today or past.'):
-      L('পরীক্ষা ','Exam in ')+N(left)+L(' দিন পরে। ৫৪ দিনের রিভিউ চক্র শেষ করতে শেষ নতুন শব্দ ',' days. To finish the full review ladder, the last new word must start by ')+dateShort(ex-REV_OFF[REV_OFF.length-1])+'.')+'</p>'+
-      (need!=null?'<p class="'+(need<=pl.perDay?'ok':'badc')+'" style="margin-top:8px">'+L('রোজ ',' Needed: ')+N(need)+L(' টি নতুন শব্দ দরকার (প্রায় ',' new words a day (about ')+fmtSec(need*per)+L(' প্রতিদিন)।',' a day). ')+(need<=pl.perDay?L('আপনার বর্তমান গতিতে সম্ভব।','That fits your current pace.'):L('বর্তমান গতির চেয়ে বেশি, সময় বাড়াতে হবে।','That is more than your current pace; add study time.'))+'</p>':
-       (left>0?'<p class="badc" style="margin-top:8px">'+L('সময় অপর্যাপ্ত: সম্পূর্ণ রিভিউ চক্রের জন্য যথেষ্ট দিন নেই। পুরো ফাইল শেষ করা যাবে না, তাই কম গুরুত্বপূর্ণ বিভাগ বাদ দিন।','Not enough days left for the full ladder.')+'</p>':''))+'</section>';
-  }
-  var rows=PL.all?pl.rows:pl.rows.slice(0,14);
-  h+='<section class="card"><h2>'+L('দিনের হিসাবে টার্গেট','Daily targets')+'</h2>';
-  if(!rows.length)h+='<div class="empty">'+L('সব শব্দ ইতোমধ্যে শুরু করা হয়েছে।','Every entry has already been started.')+'</div>';
-  else h+='<div class="scroll"><table><thead><tr><th>'+L('দিন','Day')+'</th><th>'+L('তারিখ','Date')+'</th><th class="r">'+L('নতুন','New')+'</th><th class="r">'+L('রিভিউ (আন্দাজ)','Reviews (est.)')+'</th><th class="r">'+L('সময়','Time')+'</th><th>'+L('ক্যাটাগরি','Categories')+'</th></tr></thead><tbody>'+
-    rows.map(function(r){return '<tr'+(r.k===0?' style="background:var(--accent-soft)"':'')+'><td class="num">'+N(r.k+1)+'</td><td>'+dateShort(r.day)+(r.k===0?' ('+L('আজ','today')+')':'')+'</td><td class="r num">'+N(r.n)+'</td><td class="r num">'+N(r.rev)+'</td><td class="r num">'+fmtSec(r.sec)+'</td><td class="small">'+Object.keys(r.comp).map(function(c){return esc(cn(c))+' ×'+N(r.comp[c]);}).join(', ')+'</td></tr>';}).join('')+'</tbody></table></div>'+
-    (pl.rows.length>14?'<div class="row" style="justify-content:center;margin-top:12px"><button class="btn sm" data-a="plall">'+(PL.all?L('কম দেখান','Show fewer'):L('সব ',  'Show all ')+N(pl.rows.length)+L(' দিন দেখান',' days'))+'</button></div>':'');
-  h+='<p class="muted small" style="margin-top:10px">'+L('রিভিউ সংখ্যা ধরে নেওয়া হয়েছে যে প্রতিটি শব্দ ৩, ১০, ২৪ ও ৫৪তম দিনে (৩, ৭, ১৪, ৩০ দিনের ব্যবধানে) রিভিউ হবে। ভুল উত্তর দিলে বাস্তবে কিছু বেশি হবে।','Reviews assume each word returns on days 3, 10, 24 and 54 after it is introduced (3, 7, 14, 30 day gaps). Misses add a few more in practice.')+'</p></section>';
-  return h;
-}
 function moreView(){
   return '<h1>'+L('আরও','More')+'</h1><section class="grid g2"><div class="card mode"><h3>'+L('ডেটা রিপোর্ট','Data completeness report')+'</h3><p>'+L('ফাইল থেকে কতগুলো এন্ট্রি বের হয়েছে ও যাচাই হয়েছে।','How many entries were extracted from the file and verified.')+'</p><button class="btn pri sm" data-a="go" data-r="report">'+L('দেখুন','Open')+'</button></div>'+
-   '<div class="card mode"><h3>'+L('সেটিংস','Settings')+'</h3><p>'+L('ভাষা, থিম, পড়ার সময়, ব্যাকআপ।','Language, theme, study time, backup.')+'</p><button class="btn pri sm" data-a="go" data-r="prefs">'+L('খুলুন','Open')+'</button></div></section>';
+   '<div class="card mode"><h3>'+L('সেটিংস','Settings')+'</h3><p>'+L('ভাষা, থিম, প্রোফাইল ও সিঙ্ক।','Language, theme, profile and sync.')+'</p><button class="btn pri sm" data-a="go" data-r="prefs">'+L('খুলুন','Open')+'</button></div></section>';
 }
 function reportView(){
   var live={};ENTRIES.forEach(function(e){live[e.cat]=(live[e.cat]||0)+1;});
@@ -911,8 +840,7 @@ function prefsView(){
   var h='<h1>'+L('সেটিংস','Settings')+'</h1><section class="card prof-card" id="profile">'+profileHTML()+'</section>'+installHTML()+'<section class="card"><div class="grid g2">'+
    sel('s1','lang',{label:L('ভাষা','Language'),o:[['bn','বাংলা'],['en','English']]},s.lang)+
    sel('s2','theme',{label:L('থিম','Theme'),o:[['auto',L('ডিভাইস অনুযায়ী','Follow device')],['light',L('হালকা','Light')],['dark',L('গাঢ়','Dark')]]},s.theme)+
-   sel('s3','hours',{label:L('প্রতিদিন পড়ার সময়','Study time per day'),o:[0.5,1,1.5,2,3,4].map(function(v){return [v,N(v)+L(' ঘণ্টা',' h')];})},s.hours)+
-   sel('s4','newPerDay',{label:L('দৈনিক নতুন শব্দ','New words per day'),o:[['auto',L('স্বয়ংক্রিয়','Automatic')]].concat([5,10,15,20,30,40,60,80,100].map(function(v){return [v,N(v)];}))},s.newPerDay)+
+   sel('s4','newPerDay',{label:L('দৈনিক নতুন শব্দ','New words per day'),o:[5,10,15,20,30,40,60,80,100].map(function(v){return [v,N(v)];})},+s.newPerDay||20)+
    sel('s5','order',{label:L('নতুন শব্দ কোন ক্রমে আসবে','Order of new words'),o:[['source',L('ফাইলের ক্রমে','File order')],['mixed',L('ক্যাটাগরি মিশিয়ে','Mixed across categories')]]},s.order)+
    sel('s6','dir',{label:L('প্রশ্নের দিক (বিপরীত শব্দ ও পরিভাষা)','Direction (antonyms and terms)'),o:[['forward',L('সোজা','Forward')],['reverse',L('উল্টো','Reverse')],['mixed',L('মিশ্র','Mixed')]]},s.dir)+
    sel('s7','maxReviews',{label:L('একদিনে সর্বোচ্চ রিভিউ','Max reviews per day'),o:[40,80,120,200,300].map(function(v){return [v,N(v)];})},s.maxReviews)+
@@ -1033,7 +961,7 @@ function typeHTML(){
 function summaryHTML(){
   var r=S.results,ok=r.filter(function(x){return x.q>=3;}).length,sec=(Date.now()-S.t0)/1000;
   var miss=r.filter(function(x){return x.q<3;});
-  var h='<div class="stage"><h1>'+L('শেষ! চমৎকার','Session complete')+'</h1><section class="card lift"><div class="grid g3">'+statTile(L('শব্দ','Words'),N(r.length),'')+statTile(L('সঠিক','Correct'),r.length?N(Math.round(ok/r.length*100))+'%':'—',N(ok)+'/'+N(r.length))+statTile(L('সময়','Time'),fmtSec(sec),'')+'</div></section>';
+  var h='<div class="stage"><h1>'+L('শেষ! চমৎকার','Session complete')+'</h1><section class="card lift"><div class="grid g2">'+statTile(L('শব্দ','Words'),N(r.length),'')+statTile(L('সঠিক','Correct'),r.length?N(Math.round(ok/r.length*100))+'%':'—',N(ok)+'/'+N(r.length))+'</div></section>';
   if(miss.length)h+='<section class="card"><h2>'+L('যেগুলো ভুল হয়েছে','Missed')+'</h2><div class="list">'+miss.map(function(m){var e=BYID[m.id];return '<div class="item" style="cursor:default"><div class="l1"><span class="q">'+esc(e.q)+'</span></div><div class="a">'+esc(e.a)+'</div></div>';}).join('')+'</div><div class="row" style="margin-top:12px"><button class="btn pri" data-a="retryMissed">'+L('ভুলগুলো আবার','Retry missed')+'</button></div></section>';
   h+='<div class="row"><button class="btn" data-a="go" data-r="home">'+L('হোমে যান','Back home')+'</button><button class="btn" data-a="go" data-r="practice">'+L('আরও প্র্যাকটিস','More practice')+'</button></div></div>';
   return h;
@@ -1050,7 +978,7 @@ function render(){
   document.body.classList.toggle('focus',route==='session'||route==='learn');
   var v;
   switch(route){case 'home':v=homeView();break;case 'today':v=todayView();break;case 'practice':v=practiceView();break;case 'search':v=searchView();break;
-    case 'plan':v=planView();break;case 'more':v=moreView();break;case 'report':v=reportView();break;case 'prefs':v=prefsView();break;case 'session':v=sessionView();break;case 'learn':v=learnView();break;case 'extra':v=extraView();break;default:v=homeView();}
+    case 'more':v=moreView();break;case 'report':v=reportView();break;case 'prefs':v=prefsView();break;case 'session':v=sessionView();break;case 'learn':v=learnView();break;case 'extra':v=extraView();break;default:v=homeView();}
   document.getElementById('app').innerHTML=headerHTML()+'<main class="wrap">'+v+'</main>';
   var ti=document.getElementById('ti');if(ti)ti.focus();
   var rc=document.getElementById('rc');if(rc)rc.focus();
@@ -1124,7 +1052,6 @@ var ACT={
   none:function(){},
   more50:function(){BR.limit+=50;document.getElementById('bres').innerHTML=browseListHTML();},
   letter:function(el){BR.letter=el.dataset.v;BR.limit=50;render();},
-  plall:function(){PL.all=!PL.all;render();},
   gsignin:function(){if(!CL.ad||CL.busy)return;CL.busy=true;paintProfile();
     CL.ad.signIn().catch(function(e){CL.busy=false;paintProfile();var c=e&&e.code;if(c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request')return;toast(authMsg(c));});},
   glogAsk:function(){IMP.lo=true;paintProfile();},
@@ -1147,7 +1074,7 @@ document.addEventListener('change',function(ev){var t=ev.target;
   if(t.id==='bl'){BR.letter=t.value;BR.limit=50;render();return;}
   if(t.id==='bst'){BR.st=t.value;BR.limit=50;render();return;}
   if(t.dataset&&t.dataset.set){var k=t.dataset.set,v=t.type==='checkbox'?t.checked:t.value;
-    if(k==='hours'||k==='maxReviews')v=+v;if(k==='newPerDay'&&v!=='auto')v=+v;
+    if(k==='maxReviews'||k==='newPerDay')v=+v;
     ST.set[k]=v;if(k==='order')ORDER_CACHE.k='';stateDirty();render();}});
 document.addEventListener('keydown',function(ev){
   if(route!=='session'||!S||S.finished)return;
@@ -1159,7 +1086,7 @@ document.addEventListener('keydown',function(ev){
   else if(S.mode==='type'){if(c.tres&&c.long){var m2={'1':1,'2':3,'3':4}[ev.key];if(m2)rate(m2);}else if(c.tres&&ev.key==='Enter'){ev.preventDefault();advance();}}
 });
 window.addEventListener('hashchange',function(){var r=fromHash();if(r&&r!==route&&route!=='session'){route=r;render();}});
-window.__bcs={ENTRIES:ENTRIES,sched:sched,norm:norm,checkTyped:checkTyped,buildMcq:buildMcq,todayPlan:todayPlan,buildPlan:buildPlan,stats:stats,applyGrade:applyGrade,get ST(){return ST;},go:go,get S(){return S;},ACT:ACT,startSession:startSession,view:view,allowed:allowed};
+window.__bcs={ENTRIES:ENTRIES,sched:sched,norm:norm,checkTyped:checkTyped,buildMcq:buildMcq,todayPlan:todayPlan,stats:stats,applyGrade:applyGrade,get ST(){return ST;},go:go,get S(){return S;},ACT:ACT,startSession:startSession,view:view,allowed:allowed};
 route=fromHash()||'home';
 render();
 cloudInit();
