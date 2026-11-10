@@ -161,6 +161,10 @@ td.r,th.r{text-align:right}
 .tbar{display:flex;gap:10px 12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .note{padding:12px 16px}
 .note ul{margin:0;padding-left:18px;display:grid;gap:2px;font-size:14px;color:var(--muted)}
+.missi{display:grid;gap:3px;padding:12px 0;border-top:1px solid var(--line)}
+.missi:first-child{border-top:0;padding-top:4px}
+.missi .q{font-weight:700;overflow-wrap:anywhere}
+.missi .a{color:var(--muted);font-size:15px;overflow-wrap:anywhere}
 /* profile */
 .prof-card{display:grid;gap:14px}
 .prof{display:flex;gap:14px;align-items:center}
@@ -263,8 +267,6 @@ body.focus header.top nav.tabs{display:none}
 .match button.sel{border-color:var(--accent);background:var(--accent-soft)}
 .match button.done{border-color:var(--good);background:var(--good-soft);opacity:.7}
 .match button.wrong{border-color:var(--bad);background:var(--bad-soft)}
-.star{background:none;border:0;font-size:20px;line-height:1;color:var(--muted);padding:4px 8px;min-height:32px}
-.star.on{color:var(--warn)}
 #toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);border-radius:10px;padding:10px 16px;font-size:14px;z-index:50;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 32px)}
 #toast.show{opacity:1}
 .hint{background:var(--accent-soft);border-radius:10px;padding:10px 14px;font-size:14px}
@@ -361,7 +363,6 @@ function applyGrade(id,q,ms,extra){
   var today=dayIdx(),c0=ST.cards[id],wasNew=!c0||!c0.n;
   var c=sched(c0,q,today);
   c.n=(c0&&c0.n||0)+1;c.c=(c0&&c0.c||0)+(q>=3?1:0);c.w=(c0&&c0.w||0)+(q<3?1:0);
-  if(c0&&c0.star)c.star=true;
   c.u=Date.now();
   ST.cards[id]=c;
   ms=Math.min(ms||0,90000);
@@ -372,10 +373,9 @@ function applyGrade(id,q,ms,extra){
 }
 function status(id){var c=ST.cards[id];if(!c||!c.n)return 'new';if(c.s>=5||c.iv>=21)return 'mastered';if(c.s>=3)return 'review';return 'learning';}
 function isLearned(id){var c=ST.cards[id];return !!(c&&c.n&&c.s>=2);}
-function isDifficult(id){var c=ST.cards[id];return !!(c&&((c.n&&(c.l>=2||c.ef<2.0||(c.n>=3&&c.c/c.n<0.6)))||c.star));}
-function isWeak(id){var c=ST.cards[id];return !!(c&&((c.n&&(c.l>0||(c.n>=2&&c.c/c.n<0.75)))||c.star));}
+function isDifficult(id){var c=ST.cards[id];return !!(c&&((c.n&&(c.l>=2||c.ef<2.0||(c.n>=3&&c.c/c.n<0.6)))));}
+function isWeak(id){var c=ST.cards[id];return !!(c&&((c.n&&(c.l>0||(c.n>=2&&c.c/c.n<0.75)))));}
 function stLabel(s){return {new:L('নতুন','New'),learning:L('শিখছি','Learning'),review:L('রিভিউ','Review'),mastered:L('মুখস্থ','Mastered')}[s];}
-function toggleStar(id){var c=ST.cards[id];if(!c)c=ST.cards[id]={s:0,ef:2.5,iv:0,l:0,b:1,due:dayIdx(),n:0,c:0,w:0};c.star=!c.star;c.u=Date.now();save();cloudCard(id);return c.star;}
 
 /* ---------- planner ---------- */
 var ORDER_CACHE={k:'',v:[]};
@@ -743,12 +743,11 @@ function learnView(){
    '<label class="switch small muted"><input type="checkbox" id="lcover" data-a="lcover"'+(UI.cover?' checked':'')+'><span>'+L('উত্তর ঢেকে রাখুন (নিজেকে যাচাই করতে)','Cover answers (to test yourself)')+'</span></label>'+
    '<section class="card flat" style="padding:4px 14px 8px"><ol class="lnl">';
   ids.forEach(function(id,i){
-    var e=BYID[id],a=e.items?e.items.join(', '):e.a,c=ST.cards[id],star=c&&c.star,hid=UI.cover&&!UI.rev[id],mk=isMarked(id);
+    var e=BYID[id],a=e.items?e.items.join(', '):e.a,c=ST.cards[id],hid=UI.cover&&!UI.rev[id],mk=isMarked(id);
     h+='<li class="ln'+(mk?' rd':'')+'"><span class="no">'+N(i+1)+'</span><div class="lb"><div class="q">'+esc(e.q)+'</div>'+
       (hid?'<button class="hide" data-a="lrev" data-id="'+id+'">'+L('ট্যাপ করে উত্তর দেখুন','Tap to show the answer')+'</button>':'<div class="a">'+esc(a)+'</div>')+
       '<div class="meta"><span class="tag cat">'+esc(cn(e.cat))+'</span>'+(e.unc?'<span class="tag unc">'+L('সন্দেহ আছে','Unclear in source')+'</span>':'')+'</div></div>'+
-      '<div class="acts"><button class="chk'+(mk?' on':'')+'" data-a="mark" data-id="'+id+'" aria-label="'+L('পড়া হয়েছে','Mark as read')+'" aria-pressed="'+(mk?'true':'false')+'">'+(mk?'✓':'')+'</button>'+
-      '<button class="star'+(star?' on':'')+'" data-a="star" data-id="'+id+'" aria-label="'+L('তারকা','Star')+'" aria-pressed="'+(star?'true':'false')+'">'+(star?'★':'☆')+'</button></div></li>';
+      '<div class="acts"><button class="chk'+(mk?' on':'')+'" data-a="mark" data-id="'+id+'" aria-label="'+L('পড়া হয়েছে','Mark as read')+'" aria-pressed="'+(mk?'true':'false')+'">'+(mk?'✓':'')+'</button>'+'</div></li>';
   });
   var nm=ids.filter(isMarked).length;
   h+='</ol></section><div class="dock"><button class="btn" data-a="learnLater">'+(UI.learnSrc==='practice'?L('পরে করব','Later'):L('পরে টেস্ট দেব','Test later'))+'</button><button class="btn pri" data-a="learnDone">'+L('টেস্ট দিন','Start test')+(nm&&nm<ids.length?' ('+N(nm)+')':'')+'</button></div></div>';
@@ -789,7 +788,7 @@ function practiceView(){
     ['mcq','MCQ',L('চারটি অপশন থেকে সঠিকটি বেছে নিন।','Pick the right answer from four options.')],
     ['type',L('লিখে উত্তর','Type the answer'),L('নিজে লিখুন; বানান ভুল হলে ধরা পড়বে।','Type it yourself; near-miss spellings are caught.')]].map(function(m){
      return '<div class="card mode"><h3>'+m[1]+'</h3><p>'+m[2]+'</p><button class="btn pri sm" data-a="startPractice" data-v="'+m[0]+'">'+L('শুরু','Start')+'</button></div>';}).join('')+
-   '<div class="card mode"><h3>'+L('দুর্বল শব্দ','Weak words')+'</h3><p>'+L('যেগুলোতে ভুল হয়েছে, কঠিন লেগেছে বা তারকা দিয়েছেন।','Words you missed, found hard, or starred.')+'</p><div class="chips">'+
+   '<div class="card mode"><h3>'+L('দুর্বল শব্দ','Weak words')+'</h3><p>'+L('যেগুলোতে ভুল হয়েছে বা কঠিন লেগেছে।','Words you missed or found hard.')+'</p><div class="chips">'+
     [['flash',L('কার্ড','Cards')],['mcq','MCQ'],['type',L('লিখে','Type')]].map(function(m){return '<button class="chip'+(UI.weakFmt===m[0]?' on':'')+'" data-a="wfmt" data-v="'+m[0]+'">'+m[1]+'</button>';}).join('')+'</div>'+
     '<button class="btn pri sm" data-a="weak">'+L('শুরু','Start')+' ('+N(ENTRIES.filter(function(e){return isWeak(e.id);}).length)+')</button></div></section>';
   return h;
@@ -799,7 +798,7 @@ function browseFilter(){
   ENTRIES.forEach(function(e,i){
     if(BR.cat!=='all'&&P(e.cat)!==BR.cat)return;
     if(BR.letter&&e._letter!==BR.letter)return;
-    if(BR.st!=='all'){if(BR.st==='diff'){if(!isDifficult(e.id))return;}else if(BR.st==='star'){if(!(ST.cards[e.id]&&ST.cards[e.id].star))return;}else if(status(e.id)!==BR.st)return;}
+    if(BR.st!=='all'){if(BR.st==='diff'){if(!isDifficult(e.id))return;}else if(status(e.id)!==BR.st)return;}
     var sc=0;
     if(q){if(e._hay.indexOf(q)<0)return;sc=e._nq===q?0:e._nq.indexOf(q)===0?1:e._nq.indexOf(q)>0?2:e._na.indexOf(q)>=0?3:4;}
     list.push({e:e,sc:sc,i:i});
@@ -815,8 +814,7 @@ function rowHTML(e){
   if(open){
     h+='<div class="det" data-a="none">'+
      (e.notes?'<p class="small"><b>'+L('ফাইলের নোট: ','Source note: ')+'</b>'+esc(e.notes.join('; '))+'</p>':'')+
-     '<p class="small muted">'+stLabel(st)+(c&&c.n?' · '+L('উত্তর ','answers ')+N(c.n)+L(', সঠিক ',', correct ')+N(c.c)+L(', পরের রিভিউ ',', next review ')+dateShort(c.due):' · '+L('এখনো পড়া হয়নি','not studied yet'))+'</p>'+
-     '<div class="row"><button class="btn sm" data-a="star" data-id="'+e.id+'">'+(c&&c.star?L('তারকা সরান','Remove star'):L('তারকা দিন','Star this'))+'</button></div></div>';
+     '<p class="small muted">'+stLabel(st)+(c&&c.n?' · '+L('উত্তর ','answers ')+N(c.n)+L(', সঠিক ',', correct ')+N(c.c)+L(', পরের রিভিউ ',', next review ')+dateShort(c.due):' · '+L('এখনো পড়া হয়নি','not studied yet'))+'</p>'+'</div>';
   }
   return h+'</div></div>';
 }
@@ -835,7 +833,7 @@ function searchView(){
   return '<section class="card sbox"><input type="search" id="bq" value="'+esc(BR.q)+'" placeholder="'+L('বাংলা বা ইংরেজিতে খুঁজুন','Search in Bengali or English')+'" aria-label="'+L('অনুসন্ধান','Search')+'" autocomplete="off">'+
    '<div class="filters"><select id="bcat" aria-label="'+L('ক্যাটাগরি','Category')+'"><option value="all">'+L('সব ক্যাটাগরি','All categories')+'</option>'+DISPCATS.map(function(c){return '<option value="'+c.id+'"'+(BR.cat===c.id?' selected':'')+'>'+esc(cn(c.id))+'</option>';}).join('')+'</select>'+
    '<select id="bl" aria-label="'+L('অক্ষর','Letter')+'"><option value="">'+L('অক্ষর','Letter')+'</option>'+ls.map(function(l){return '<option value="'+esc(l)+'"'+(BR.letter===l?' selected':'')+'>'+esc(l)+'</option>';}).join('')+'</select>'+
-   '<select id="bst" aria-label="'+L('অবস্থা','Status')+'">'+[['all',L('অবস্থা','Status')],['new',L('নতুন','New')],['learning',L('শিখছি','Learning')],['review',L('রিভিউ','Review')],['mastered',L('মুখস্থ','Mastered')],['diff',L('কঠিন','Difficult')],['star',L('তারকা','Starred')]].map(function(o){return '<option value="'+o[0]+'"'+(BR.st===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div></section>'+
+   '<select id="bst" aria-label="'+L('অবস্থা','Status')+'">'+[['all',L('অবস্থা','Status')],['new',L('নতুন','New')],['learning',L('শিখছি','Learning')],['review',L('রিভিউ','Review')],['mastered',L('মুখস্থ','Mastered')],['diff',L('কঠিন','Difficult')]].map(function(o){return '<option value="'+o[0]+'"'+(BR.st===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div></section>'+
    '<section class="card" id="bres">'+browseListHTML()+'</section>';
 }
 function moreView(){
@@ -942,9 +940,9 @@ function sessionTop(){
   return '<div class="sess-top"><button class="ib" data-a="quit" aria-label="'+L('বন্ধ করুন','Close')+'">'+ICON_X+'</button><div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+S.i+'"><i style="width:'+(S.i/tot*100).toFixed(1)+'%"></i></div><span class="small muted num">'+N(Math.min(S.i+1,tot))+'/'+N(tot)+'</span></div>';
 }
 function cardHead(c){
-  var e=c.e,st=status(e.id),star=ST.cards[e.id]&&ST.cards[e.id].star;
+  var e=c.e,st=status(e.id);
   return '<div class="fc-meta"><span class="tag">'+esc(cn(e.cat))+'</span><span class="tag '+st+'">'+stLabel(st)+'</span>'+(e.unc?'<span class="tag unc">'+L('সন্দেহ আছে','Unclear in source')+'</span>':'')+
-    '<span style="margin-left:auto"></span><button class="star'+(star?' on':'')+'" data-a="star" data-id="'+e.id+'" aria-label="'+L('তারকা','Star')+'" aria-pressed="'+(star?'true':'false')+'">'+(star?'★':'☆')+'</button></div>';
+    '</div>';
 }
 function rateButtons(c){
   var k=ST.cards[c.id],gd=(k&&k.s>=2)?14:7;
@@ -992,7 +990,7 @@ function summaryHTML(){
   var r=S.results,ok=r.filter(function(x){return x.q>=3;}).length,sec=(Date.now()-S.t0)/1000;
   var miss=r.filter(function(x){return x.q<3;});
   var h='<div class="stage"><h1>'+L('শেষ! চমৎকার','Session complete')+'</h1><section class="card lift"><div class="grid g2">'+statTile(L('শব্দ','Words'),N(r.length),'')+statTile(L('সঠিক','Correct'),r.length?N(Math.round(ok/r.length*100))+'%':'—',N(ok)+'/'+N(r.length))+'</div></section>';
-  if(miss.length)h+='<section class="card"><h2>'+L('যেগুলো ভুল হয়েছে','Missed')+'</h2><div class="list">'+miss.map(function(m){var e=BYID[m.id];return '<div class="item" style="cursor:default"><div class="l1"><span class="q">'+esc(e.q)+'</span></div><div class="a">'+esc(e.a)+'</div></div>';}).join('')+'</div><div class="row" style="margin-top:12px"><button class="btn pri" data-a="retryMissed">'+L('ভুলগুলো আবার','Retry missed')+'</button></div></section>';
+  if(miss.length)h+='<section class="card"><h2>'+L('যেগুলো ভুল হয়েছে','Missed')+'</h2><div class="list">'+miss.map(function(m){var e=BYID[m.id];return '<div class="missi"><span class="q">'+esc(e.q)+'</span><span class="a">'+esc(e.a)+'</span></div>';}).join('')+'</div><div class="row" style="margin-top:12px"><button class="btn pri" data-a="retryMissed">'+L('ভুলগুলো আবার','Retry missed')+'</button></div></section>';
   h+='<div class="row"><button class="btn" data-a="go" data-r="home">'+L('হোমে যান','Back home')+'</button><button class="btn" data-a="go" data-r="practice">'+L('আরও প্র্যাকটিস','More practice')+'</button></div></div>';
   return h;
 }
@@ -1077,7 +1075,6 @@ var ACT={
     var r=checkTyped(c.e,c.v,txt);r.text=txt;if(r.r==='near')r.text=txt;c.tres=r;recordFirst(r.r==='ok'?((Date.now()-c.start)<6000?5:4):r.r==='near'?3:1);render();},
   skip:function(){var c=S.cur;if(c.long){c.tres={r:'self',text:''};c.phase='a';render();return;}c.tres={r:'bad',text:''};recordFirst(1);render();},
   retryMissed:function(){var ids=S.results.filter(function(x){return x.q<3;}).map(function(x){return x.id;});var m=S.mode,f=S.from;S.done=new Set();startSession(m==='match'?'flash':m,ids,{from:f});},
-  star:function(el,ev){ev.stopPropagation();var on=toggleStar(el.dataset.id);if(route==='session'||route==='search'||route==='learn'){var y=window.pageYOffset;render();window.scrollTo(0,y);}},
   open:function(el){BR.open=BR.open===el.dataset.id?null:el.dataset.id;var r=document.getElementById('bres');if(r)r.innerHTML=browseListHTML();},
   none:function(){},
   more50:function(){BR.limit+=50;document.getElementById('bres').innerHTML=browseListHTML();},
