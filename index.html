@@ -169,6 +169,21 @@ td.r,th.r{text-align:right}
 .av.anon{background:var(--surface2);color:var(--muted)}
 .av svg{width:58%;height:58%;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
 .pi{min-width:0}.pn{font:700 18px/1.35 var(--ff-q);overflow-wrap:anywhere}.pm{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
+.prof .pi{flex:1}
+.prof.out{flex-direction:column;text-align:center;gap:10px;padding-top:4px}
+.prof.out .av{width:64px;height:64px}
+.prof.out .pn{font-size:19px}
+.prof-card .gbtn{width:100%;justify-content:center}
+.offnote{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface2);border-radius:10px;padding:8px 12px}
+.confirm{background:var(--surface2);border-radius:12px;padding:12px 14px;display:grid;gap:10px}
+.confirm p{margin:0}
+.danger{display:grid;gap:12px}
+.dz{display:flex;gap:12px;align-items:center}
+.dz h2{margin:0;font-size:16px}.dz p{margin:2px 0 0}
+.dzi{width:40px;height:40px;border-radius:12px;background:var(--bad-soft);color:var(--bad);display:grid;place-items:center;flex:none}
+.btn.dng{border-color:var(--bad);color:var(--bad);flex:none}
+.btn.dng.fill{background:var(--bad);border-color:var(--bad);color:#fff}
+.danger .confirm{background:var(--bad-soft)}
 .sync{display:inline-flex;gap:8px;align-items:center;border-radius:999px;padding:4px 12px;font-size:13px;background:var(--surface2);color:var(--muted)}
 .sync i{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
 .s-synced{background:var(--good-soft);color:var(--good)}.s-synced i{background:var(--good)}
@@ -598,6 +613,7 @@ function waitSynced(cb){var n=0;(function t(){if(syncState()!=='syncing'||n++>14
 /* profile card */
 var G_LOGO='<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
 var ICON_USER='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>';
+var ICON_TRASH='<svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
 var ICON_OUT='<svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/></svg>';
 function avatarHTML(u){
   if(!u)return '<span class="av anon">'+ICON_USER+'</span>';
@@ -608,19 +624,16 @@ function profileHTML(){
   var u=CL.user||(CL.state==='loading'?CL.cachedUser:null);
   if(u){
     var st=CL.user?syncState():(CL.state==='loading'?'connecting':'offline');
-    var lab={synced:L('ক্লাউডে সেভ হয়েছে','Saved to the cloud'),syncing:L('সিঙ্ক হচ্ছে…','Syncing…'),offline:L('অফলাইন · নেট এলে সিঙ্ক হবে','Offline · will sync when online'),connecting:L('ক্লাউডের সাথে যুক্ত হচ্ছে…','Connecting…'),error:L('সিঙ্ক হচ্ছে না','Not syncing')}[st];
-    return '<div class="prof">'+avatarHTML(u)+'<div class="pi"><div class="pn">'+esc(u.name||L('আপনি','You'))+'</div><div class="pm">'+esc(u.email)+'</div></div></div>'+
-      '<div><span class="sync s-'+st+'"><i></i>'+lab+'</span></div>'+
-      (st==='error'?'<p class="small muted">'+(CL.err==='rules'?L('Firestore-এর Rules ঠিক নেই। সেটআপ গাইডের ধাপ ৪ দেখুন।','Firestore rules are not set up. See step 4 of the setup guide.'):L('ক্লাউডে সেভ করা যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।','Could not save to the cloud. Try again in a moment.'))+'</p>':'')+
-      '<p class="small muted">'+L('যেকোনো ডিভাইসে এই Google অ্যাকাউন্টে ঢুকলে একই প্রোগ্রেস পাবেন: কুইজ রেজাল্ট, রিভিউ কার্ড, পড়া শব্দ সব।','Sign in with this Google account on any device to get the same progress: quiz results, review cards and read words.')+'</p>'+
-      (IMP.lo?'<div class="warnbox"><p>'+L('লগআউট করলে এই ডিভাইস থেকে প্রোগ্রেস মুছে যাবে। ক্লাউডে সেভ থাকবে, আবার সাইন ইন করলেই ফিরে পাবেন।','Signing out removes progress from this device. It stays in the cloud and returns when you sign in again.')+(st!=='synced'?' <b>'+L('এখনো সিঙ্ক শেষ হয়নি, একটু অপেক্ষা করে লগআউট করুন।','Sync is not finished yet. Wait a moment before signing out.')+'</b>':'')+'</p><div class="row"><button class="btn sm out" data-a="glogYes">'+L('লগআউট করুন','Sign out')+'</button><button class="btn sm" data-a="glogNo">'+L('না','Cancel')+'</button></div></div>':
+    var lab={synced:L('সিঙ্ক হয়েছে','Synced'),syncing:L('সিঙ্ক হচ্ছে…','Syncing…'),offline:L('অফলাইন','Offline'),connecting:L('যুক্ত হচ্ছে…','Connecting…'),error:L('সিঙ্ক হচ্ছে না','Not syncing')}[st];
+    return '<div class="prof">'+avatarHTML(u)+'<div class="pi"><div class="pn">'+esc(u.name||L('আপনি','You'))+'</div><div class="pm">'+esc(u.email)+'</div></div><span class="sync s-'+st+'"><i></i>'+lab+'</span></div>'+
+      (st==='error'?'<p class="small muted">'+(CL.err==='rules'?L('Firestore Rules ঠিক নেই। সেটআপ গাইডের ধাপ ৪ দেখুন।','Firestore rules are not set up. See step 4 of the setup guide.'):L('সেভ করা যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।','Could not save. Please try again shortly.'))+'</p>':'<p class="small muted">'+L('আপনার প্রোগ্রেস সব ডিভাইসে সিঙ্ক হয়।','Your progress syncs across your devices.')+'</p>')+
+      (IMP.lo?'<div class="confirm"><p class="small">'+L('লগআউট করলে এই ডিভাইস থেকে প্রোগ্রেস মুছে যাবে। ক্লাউডে থাকবে, আবার সাইন ইন করলে ফিরবে।','Signing out clears progress from this device. It stays in the cloud and returns when you sign in.')+(st!=='synced'?' <b>'+L('সিঙ্ক শেষ হওয়া পর্যন্ত অপেক্ষা করুন।','Wait for sync to finish first.')+'</b>':'')+'</p><div class="row"><button class="btn sm out" data-a="glogYes">'+L('লগআউট','Sign out')+'</button><button class="btn sm" data-a="glogNo">'+L('বাতিল','Cancel')+'</button></div></div>':
         '<div><button class="btn out" data-a="glogAsk">'+ICON_OUT+' '+L('লগআউট','Sign out')+'</button></div>');
   }
   var un=CL.state==='unavailable',ld=CL.state==='loading';
-  return '<div class="prof">'+avatarHTML(null)+'<div class="pi"><div class="pn">'+L('প্রোফাইল','Profile')+'</div><div class="pm">'+L('সাইন ইন করা নেই','Not signed in')+'</div></div></div>'+
-    '<p>'+L('Google দিয়ে সাইন ইন করলে ফোন আর ল্যাপটপে একই প্রোগ্রেস পাবেন। কুইজ রেজাল্ট, রিভিউ কার্ড সব নিজে থেকেই সেভ হবে।','Sign in with Google to keep the same progress on your phone and laptop. Quiz results and review cards save automatically.')+'</p>'+
-    '<button class="gbtn" data-a="gsignin"'+((un||ld||CL.busy)?' disabled':'')+'>'+G_LOGO+'<span>'+(CL.busy?L('সাইন ইন হচ্ছে…','Signing in…'):ld?L('অপেক্ষা করুন…','Please wait…'):L('Google দিয়ে সাইন ইন করুন','Continue with Google'))+'</span></button>'+
-    (un?'<p class="small muted">'+L('ক্লাউডের সাথে যুক্ত হওয়া যায়নি (অফলাইন, বা এই পেজে Firebase চালু নেই)। প্রোগ্রেস আপাতত এই ব্রাউজারে সেভ হচ্ছে।','Could not reach the cloud (offline, or Firebase is not available on this page). Progress is saved in this browser for now.')+'</p><div><button class="btn sm" data-a="cloudRetry">'+L('আবার চেষ্টা করুন','Try again')+'</button></div>':'<p class="small muted">'+L('নতুন হলে অ্যাকাউন্ট নিজে থেকেই তৈরি হবে।','A new account is created automatically the first time.')+'</p>');
+  return '<div class="prof out">'+avatarHTML(null)+'<div class="pi"><div class="pn">'+L('সাইন ইন','Sign in')+'</div><div class="pm">'+L('সব ডিভাইসে একই প্রোগ্রেস পেতে Google দিয়ে ঢুকুন।','Use Google to keep your progress on every device.')+'</div></div></div>'+
+    '<button class="gbtn" data-a="gsignin"'+((un||ld||CL.busy)?' disabled':'')+'>'+G_LOGO+'<span>'+(CL.busy?L('সাইন ইন হচ্ছে…','Signing in…'):ld?L('অপেক্ষা করুন…','Please wait…'):L('Google দিয়ে চালিয়ে যান','Continue with Google'))+'</span></button>'+
+    (un?'<div class="offnote"><span class="small muted">'+L('অফলাইন। প্রোগ্রেস এই ডিভাইসে সেভ আছে।','Offline. Progress is saved on this device.')+'</span><button class="link" data-a="cloudRetry">'+L('আবার চেষ্টা','Retry')+'</button></div>':'');
 }
 var DEFER=null;
 function isStandalone(){try{return (window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;}catch(e){return false;}}
@@ -862,8 +875,9 @@ function prefsView(){
    sel('s7','maxReviews',{label:L('একদিনে সর্বোচ্চ রিভিউ','Max reviews per day'),o:[40,80,120,200,300].map(function(v){return [v,N(v)];})},s.maxReviews)+
    '</div><div class="grid" style="gap:12px;margin-top:16px"><label class="switch"><input type="checkbox" id="s8" data-set="interleave"'+(s.interleave?' checked':'')+'><span>'+L('ক্যাটাগরি মিশিয়ে দেখান','Interleave categories in a session')+'</span></label>'+
    '<label class="switch"><input type="checkbox" id="s9" data-set="recall"'+(s.recall?' checked':'')+'><span>'+L('ফ্ল্যাশকার্ডে উত্তর দেখার আগে নিজে লিখে মনে করুন','Type your recall before revealing a flashcard')+'</span></label></div></section>';
-  h+='<section class="card"><h2>'+L('সব প্রোগ্রেস মুছে ফেলুন','Reset progress')+'</h2><p class="small muted">'+(CL.user?L('এটি ফেরানো যায় না। ক্লাউডে সেভ করা প্রোগ্রেসও মুছে যাবে, সব ডিভাইস থেকে।','This cannot be undone. Your cloud progress is erased too, on every device.'):L('এটি ফেরানো যায় না।','This cannot be undone.'))+'</p><div class="row" style="margin-top:10px">'+
-   (IMP.confirm?'<button class="btn sm" style="border-color:var(--bad);color:var(--bad)" data-a="resetYes">'+L('হ্যাঁ, মুছে ফেলুন','Yes, erase everything')+'</button><button class="btn sm" data-a="resetNo">'+L('না','Cancel')+'</button>':'<button class="btn sm" data-a="resetAsk">'+L('মুছুন','Erase')+'</button>')+'</div></section>';
+  h+='<section class="card danger"><div class="dz"><span class="dzi">'+ICON_TRASH+'</span><div class="pi"><h2>'+L('প্রোগ্রেস রিসেট','Reset progress')+'</h2><p class="small muted">'+(CL.user?L('সব ডিভাইস ও ক্লাউড থেকে মুছে যাবে।','Erases it from the cloud and every device.'):L('এই ডিভাইসের সব অগ্রগতি মুছে যাবে।','Erases all progress on this device.'))+'</p></div>'+
+   (IMP.confirm?'':'<button class="btn sm dng" data-a="resetAsk">'+L('রিসেট','Reset')+'</button>')+'</div>'+
+   (IMP.confirm?'<div class="confirm"><p class="small"><b>'+L('নিশ্চিত?','Are you sure?')+'</b> '+L('এটা ফেরানো যায় না।','This cannot be undone.')+'</p><div class="row"><button class="btn sm dng fill" data-a="resetYes">'+L('হ্যাঁ, মুছুন','Yes, erase')+'</button><button class="btn sm" data-a="resetNo">'+L('বাতিল','Cancel')+'</button></div></div>':'')+'</section>';
   return h;
 }
 
